@@ -1,0 +1,7164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="author" content="Brendon Hall">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>Tidying the OK Historical Production Dataset | Brendon Hall</title>
+
+	<link rel="shortcut icon" href="/favicon.ico?v=2" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="alternate" type="application/atom+xml" title="Brendon Hall blog atom feed" href="/feeds/all.atom.xml" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        
+        <link rel="stylesheet" type="text/css" href="/theme/css/icons.css"/>
+        <style>.highlight .hll { background-color: #ffffcc }
+.highlight .c { color: #60a0b0; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #007020; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #60a0b0; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #007020 } /* Comment.Preproc */
+.highlight .c1 { color: #60a0b0; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #60a0b0; background-color: #fff0f0 } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #808080 } /* Generic.Output */
+.highlight .gp { color: #c65d09; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0040D0 } /* Generic.Traceback */
+.highlight .kc { color: #007020; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #007020; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #007020; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #007020 } /* Keyword.Pseudo */
+.highlight .kr { color: #007020; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #902000 } /* Keyword.Type */
+.highlight .m { color: #40a070 } /* Literal.Number */
+.highlight .s { color: #4070a0 } /* Literal.String */
+.highlight .na { color: #4070a0 } /* Name.Attribute */
+.highlight .nb { color: #007020 } /* Name.Builtin */
+.highlight .nc { color: #0e84b5; font-weight: bold } /* Name.Class */
+.highlight .no { color: #60add5 } /* Name.Constant */
+.highlight .nd { color: #555555; font-weight: bold } /* Name.Decorator */
+.highlight .ni { color: #d55537; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #007020 } /* Name.Exception */
+.highlight .nf { color: #06287e } /* Name.Function */
+.highlight .nl { color: #002070; font-weight: bold } /* Name.Label */
+.highlight .nn { color: #0e84b5; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #062873; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #bb60d5 } /* Name.Variable */
+.highlight .ow { color: #007020; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #40a070 } /* Literal.Number.Float */
+.highlight .mh { color: #40a070 } /* Literal.Number.Hex */
+.highlight .mi { color: #40a070 } /* Literal.Number.Integer */
+.highlight .mo { color: #40a070 } /* Literal.Number.Oct */
+.highlight .sb { color: #4070a0 } /* Literal.String.Backtick */
+.highlight .sc { color: #4070a0 } /* Literal.String.Char */
+.highlight .sd { color: #4070a0; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #4070a0 } /* Literal.String.Double */
+.highlight .se { color: #4070a0; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #4070a0 } /* Literal.String.Heredoc */
+.highlight .si { color: #70a0d0; font-style: italic } /* Literal.String.Interpol */
+.highlight .sx { color: #c65d09 } /* Literal.String.Other */
+.highlight .sr { color: #235388 } /* Literal.String.Regex */
+.highlight .s1 { color: #4070a0 } /* Literal.String.Single */
+.highlight .ss { color: #517918 } /* Literal.String.Symbol */
+.highlight .bp { color: #007020 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #bb60d5 } /* Name.Variable.Class */
+.highlight .vg { color: #bb60d5 } /* Name.Variable.Global */
+.highlight .vi { color: #bb60d5 } /* Name.Variable.Instance */
+.highlight .il { color: #40a070 } /* Literal.Number.Integer.Long */</style>
+        <style>/*
+ * Globals
+ */
+
+@media (min-width: 48em) {
+  html {
+    font-size: 18px;
+  }
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #555;
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: normal;
+  color: #333;
+}
+
+/* body {
+  margin: 0;
+  padding: 0;
+
+  line-height: 1.6em;
+  color: #222;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+} */
+
+
+a {
+  color: #007EE5;
+  text-decoration: none;
+}
+a:hover {
+  color: #007EE5;
+  text-decoration: none;
+}
+
+
+/* Nav links */
+.navbar-default {
+  background-color: #253370;
+  border-color: #3d52ae;
+}
+.navbar-default .navbar-brand {
+  color: #ACA5B3;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #ffffff;
+}
+.navbar-default .navbar-text {
+  color: #ACA5B3;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #ACA5B3;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #ffffff;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #ffffff;
+  background-color: #3d52ae;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  color: #ffffff;
+  background-color: #3d52ae;
+}
+.navbar-default .navbar-toggle {
+  border-color: #3d52ae;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: #3d52ae;
+}
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #a8b0b2;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+  border-color: #ACA5B3;
+}
+.navbar-default .navbar-link {
+  color: #ACA5B3;
+}
+.navbar-default .navbar-link:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #ACA5B3;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #ffffff;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #ffffff;
+    background-color: #3d52ae;
+  }
+}
+
+/*
+ * Blog name and description
+ */
+
+.blog-header {
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+  border-bottom: .05rem solid #eee;
+}
+.blog-title {
+  margin-bottom: 0;
+  font-size: 2rem;
+  font-weight: normal;
+}
+.blog-description {
+  font-size: 1.1rem;
+  color: #999;
+}
+
+
+
+
+
+article {
+  margin: 0;
+}
+article header.about {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+article header {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+article header h1 {
+  margin-bottom: 2px;
+  font-weight: 700;
+  color: #000;
+}
+article header time {
+  color: #9E9E9E;
+  font-size: 0.85em;
+  float: right;
+}
+article header time.left {
+  color: #9E9E9E;
+  font-size: 0.85em;
+  float: left;
+}
+article div.social-links ul {
+  padding: 0px;
+}
+article div.social-links li {
+  display: inline;
+  font-size: 20px;
+}
+article div.social-links li a {
+  color: #000;
+  padding: 10px;
+}
+article div.social-links li a:hover {
+  color: #666;
+  text-decoration: none;
+}
+article p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  line-height: 1.6em;
+}
+article p.note {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 0.533em 0.733em;
+}
+article p.update {
+  background-color: #FEEFB3;
+  border: 1px solid #e6e68a;
+  padding: 0.533em 0.733em;
+}
+article p.alert {
+  background-color: #ffe2e2;
+  border: 1px solid #ffb2b2;
+  padding: 0.533em 0.733em;
+}
+article ul,
+article ol {
+  margin-top: 0px;
+  margin-bottom: 25px;
+}
+article li {
+  font-size: 16px;
+  line-height: 1.6em;
+}
+article a:hover {
+  text-decoration: underline;
+}
+article blockquote {
+  border-left: 2px solid #c7c7cc;
+  color: #666;
+  margin: 30px 0;
+  padding: 0 0 0 25px;
+}
+article img {
+  max-width: 100%;
+}
+article code {
+  color: #333;
+  background-color: #EEE;
+  border-radius: 0;
+  font-size: 13px;
+}
+article .meta {
+  font-size: 11px;
+}
+article .meta a:hover {
+  text-decoration: none;
+}
+article .meta div {
+  margin-bottom: 20px;
+  display: block;
+}
+article .meta a.tag {
+  margin: 0 10px 10px 0;
+  padding: 1px 12px;
+  display: inline-block;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.05);
+}
+article .meta a.tag:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+article .meta a.read_more,
+article .meta a.comments_btn {
+  font-size: 14px;
+  font-weight: 800;
+  padding: 10px 20px;
+  color: #253370;
+  background: #FFF;
+  border: 1px solid #253370;
+}
+article .meta a.read_more:hover,
+article .meta a.comments_btn:hover {
+  color: #FFF;
+  background: #253370;
+}
+.index {
+  max-width: 700px;
+}
+.index article header h2 {
+  font-size: 36px;
+  margin-bottom: 2px;
+  font-weight: 700;
+}
+.index article header h2 a {
+  color: #000;
+}
+.index article header h2 a:hover {
+  color: #007EE5;
+  text-decoration: none;
+}
+.index .separator {
+  padding: 40px 0 0 0;
+  margin: 0 0 40px 0;
+  height: 10px;
+  border-bottom: solid 1px #CCC;
+}
+.index .pagination {
+  display: block;
+  margin-bottom: 100px;
+}
+.index .pagination .left {
+  text-align: right;
+}
+.index .pagination .right {
+  text-align: left;
+}
+.index .pagination a {
+  display: inline-block;
+  border: 2px solid #253370;
+  margin: 0 5px;
+  padding: 8px 20px;
+  font-weight: bold;
+  color: #253370;
+}
+.index .pagination a:hover {
+  color: #FFF;
+  background: #253370;
+}
+.post {
+  max-width: 700px;
+}
+/* .post h2:before {
+  content: "# ";
+  font-weight: bold;
+  color: #DDD;
+}
+.post h3:before {
+  content: "## ";
+  font-weight: bold;
+  color: #DDD;
+}
+.post h4:before {
+  content: "### ";
+  font-weight: bold;
+  color: #DDD;
+} */
+.post article .meta {
+  margin: 50px 0 100px;
+}
+.list {
+  max-width: 700px;
+}
+.list ul.double-list {
+  margin: 0 auto 60px;
+  padding: 0;
+  list-style-type: none;
+}
+.list ul.double-list li {
+  padding: 5px 0;
+}
+.list ul.double-list li h2 {
+  font-size: 1em;
+  display: inline;
+  font-weight: normal;
+}
+.list ul.double-list li span {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: right;
+  float: right;
+  padding-top: 3px;
+  font-size: 12px;
+  color: #999;
+}
+.full-width-content {
+  padding-top: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+.col-xs-1,
+.col-sm-1,
+.col-md-1,
+.col-lg-1,
+.col-xs-2,
+.col-sm-2,
+.col-md-2,
+.col-lg-2,
+.col-xs-3,
+.col-sm-3,
+.col-md-3,
+.col-lg-3,
+.col-xs-4,
+.col-sm-4,
+.col-md-4,
+.col-lg-4,
+.col-xs-5,
+.col-sm-5,
+.col-md-5,
+.col-lg-5,
+.col-xs-6,
+.col-sm-6,
+.col-md-6,
+.col-lg-6,
+.col-xs-7,
+.col-sm-7,
+.col-md-7,
+.col-lg-7,
+.col-xs-8,
+.col-sm-8,
+.col-md-8,
+.col-lg-8,
+.col-xs-9,
+.col-sm-9,
+.col-md-9,
+.col-lg-9,
+.col-xs-10,
+.col-sm-10,
+.col-md-10,
+.col-lg-10,
+.col-xs-11,
+.col-sm-11,
+.col-md-11,
+.col-lg-11,
+.col-xs-12,
+.col-sm-12,
+.col-md-12,
+.col-lg-12 {
+  padding-right: 0px;
+  padding-left: 0px;
+}</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+        <script type="text/javascript">
+        init_mathjax = function() {
+            if (window.MathJax) {
+                // MathJax loaded
+                MathJax.Hub.Config({
+                    tex2jax: {
+                        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+                    },
+                    displayAlign: 'left', // Change this to 'center' to center equations.
+                    "HTML-CSS": {
+                        styles: {'.MathJax_Display': {"margin": 0}}
+                    }
+                });
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+            }
+        }
+        init_mathjax();
+        </script>
+
+    </head>
+
+    <body>
+        <header class="navbar navbar-default navbar-static-top bs-docs-nav">
+            <div class="container-fluid">
+                <div class="navbar-header">
+		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#theNavbar">
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span> 
+	      </button>
+          <a class="navbar-brand" href="/" title="Home" class="title">Brendon Hall</a>
+            </div>
+            <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation" id="theNavbar">
+		    <ul class="nav navbar-nav navbar-right">
+                       
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div id="wrap">
+<div class="container post">
+    <article>
+        <header>
+            <h1>Tidying the OK Historical Production Dataset</h1>
+            <time datetime="article.date.isoformat()" pubdate>Sat 26 August 2017</time>
+        </header>
+
+        <div class="article_content">
+            <style type="text/css">/*!
+*
+* IPython notebook
+*
+*/
+/* CSS font colors for translated ANSI colors. */
+.ansibold {
+  font-weight: bold;
+}
+/* use dark versions for foreground, to improve visibility */
+.ansiblack {
+  color: black;
+}
+.ansired {
+  color: darkred;
+}
+.ansigreen {
+  color: darkgreen;
+}
+.ansiyellow {
+  color: #c4a000;
+}
+.ansiblue {
+  color: darkblue;
+}
+.ansipurple {
+  color: darkviolet;
+}
+.ansicyan {
+  color: steelblue;
+}
+.ansigray {
+  color: gray;
+}
+/* and light for background, for the same reason */
+.ansibgblack {
+  background-color: black;
+}
+.ansibgred {
+  background-color: red;
+}
+.ansibggreen {
+  background-color: green;
+}
+.ansibgyellow {
+  background-color: yellow;
+}
+.ansibgblue {
+  background-color: blue;
+}
+.ansibgpurple {
+  background-color: magenta;
+}
+.ansibgcyan {
+  background-color: cyan;
+}
+.ansibggray {
+  background-color: gray;
+}
+div.cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  width: 100%;
+  padding: 5px;
+  /* This acts as a spacer between cells, that is outside the border */
+  margin: 0px;
+  outline: none;
+  border-left-width: 1px;
+  padding-left: 5px;
+  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+}
+div.cell.jupyter-soft-selected {
+  border-left-color: #90CAF9;
+  border-left-color: #E3F2FD;
+  border-left-width: 1px;
+  padding-left: 5px;
+  border-right-color: #E3F2FD;
+  border-right-width: 1px;
+  background: #E3F2FD;
+}
+@media print {
+  div.cell.jupyter-soft-selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected {
+  border-color: #ababab;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  div.cell.selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected.jupyter-soft-selected {
+  border-left-width: 0;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
+}
+.edit_mode div.cell.selected {
+  border-color: #66BB6A;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  .edit_mode div.cell.selected {
+    border-color: transparent;
+  }
+}
+.prompt {
+  /* This needs to be wide enough for 3 digit prompt numbers: In[100]: */
+  min-width: 14ex;
+  /* This padding is tuned to match the padding on the CodeMirror editor. */
+  padding: 0.4em;
+  margin: 0px;
+  font-family: monospace;
+  text-align: right;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+  /* Don't highlight prompt number selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Use default cursor */
+  cursor: default;
+}
+@media (max-width: 540px) {
+  .prompt {
+    text-align: left;
+  }
+}
+div.inner_cell {
+  min-width: 0;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_area {
+  border: 1px solid #cfcfcf;
+  border-radius: 2px;
+  background: #f7f7f7;
+  line-height: 1.21429em;
+}
+/* This is needed so that empty prompt areas can collapse to zero height when there
+   is no content in the output_subarea and the prompt. The main purpose of this is
+   to make sure that empty JavaScript output_subareas have no height. */
+div.prompt:empty {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+div.unrecognized_cell {
+  padding: 5px 5px 5px 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.unrecognized_cell .inner_cell {
+  border-radius: 2px;
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+  border: 1px solid #cfcfcf;
+  background: #eaeaea;
+}
+div.unrecognized_cell .inner_cell a {
+  color: inherit;
+  text-decoration: none;
+}
+div.unrecognized_cell .inner_cell a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+@media (max-width: 540px) {
+  div.unrecognized_cell > div.prompt {
+    display: none;
+  }
+}
+div.code_cell {
+  /* avoid page breaking on code cells when printing */
+}
+@media print {
+  div.code_cell {
+    page-break-inside: avoid;
+  }
+}
+/* any special styling for code cells that are currently running goes here */
+div.input {
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.input {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_prompt {
+  color: #303F9F;
+  border-top: 1px solid transparent;
+}
+div.input_area > div.highlight {
+  margin: 0.4em;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+div.input_area > div.highlight > pre {
+  margin: 0px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+/* The following gets added to the <head> if it is detected that the user has a
+ * monospace font with inconsistent normal/bold/italic height.  See
+ * notebookmain.js.  Such fonts will have keywords vertically offset with
+ * respect to the rest of the text.  The user should select a better font.
+ * See: https://github.com/ipython/ipython/issues/1503
+ *
+ * .CodeMirror span {
+ *      vertical-align: bottom;
+ * }
+ */
+.CodeMirror {
+  line-height: 1.21429em;
+  /* Changed from 1em to our global default */
+  font-size: 14px;
+  height: auto;
+  /* Changed to auto to autogrow */
+  background: none;
+  /* Changed from white to allow our bg to show through */
+}
+.CodeMirror-scroll {
+  /*  The CodeMirror docs are a bit fuzzy on if overflow-y should be hidden or visible.*/
+  /*  We have found that if it is visible, vertical scrollbars appear with font size changes.*/
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.CodeMirror-lines {
+  /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
+  /* we have set a different line-height and want this to scale with that. */
+  padding: 0.4em;
+}
+.CodeMirror-linenumber {
+  padding: 0 8px 0 4px;
+}
+.CodeMirror-gutters {
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
+}
+.CodeMirror pre {
+  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
+  /* .CodeMirror-lines */
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+/*
+
+Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Org>
+Adapted from GitHub theme
+
+*/
+.highlight-base {
+  color: #000;
+}
+.highlight-variable {
+  color: #000;
+}
+.highlight-variable-2 {
+  color: #1a1a1a;
+}
+.highlight-variable-3 {
+  color: #333333;
+}
+.highlight-string {
+  color: #BA2121;
+}
+.highlight-comment {
+  color: #408080;
+  font-style: italic;
+}
+.highlight-number {
+  color: #080;
+}
+.highlight-atom {
+  color: #88F;
+}
+.highlight-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.highlight-builtin {
+  color: #008000;
+}
+.highlight-error {
+  color: #f00;
+}
+.highlight-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.highlight-meta {
+  color: #AA22FF;
+}
+/* previously not defined, copying from default codemirror */
+.highlight-def {
+  color: #00f;
+}
+.highlight-string-2 {
+  color: #f50;
+}
+.highlight-qualifier {
+  color: #555;
+}
+.highlight-bracket {
+  color: #997;
+}
+.highlight-tag {
+  color: #170;
+}
+.highlight-attribute {
+  color: #00c;
+}
+.highlight-header {
+  color: blue;
+}
+.highlight-quote {
+  color: #090;
+}
+.highlight-link {
+  color: #00c;
+}
+/* apply the same style to codemirror */
+.cm-s-ipython span.cm-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-atom {
+  color: #88F;
+}
+.cm-s-ipython span.cm-number {
+  color: #080;
+}
+.cm-s-ipython span.cm-def {
+  color: #00f;
+}
+.cm-s-ipython span.cm-variable {
+  color: #000;
+}
+.cm-s-ipython span.cm-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-variable-2 {
+  color: #1a1a1a;
+}
+.cm-s-ipython span.cm-variable-3 {
+  color: #333333;
+}
+.cm-s-ipython span.cm-comment {
+  color: #408080;
+  font-style: italic;
+}
+.cm-s-ipython span.cm-string {
+  color: #BA2121;
+}
+.cm-s-ipython span.cm-string-2 {
+  color: #f50;
+}
+.cm-s-ipython span.cm-meta {
+  color: #AA22FF;
+}
+.cm-s-ipython span.cm-qualifier {
+  color: #555;
+}
+.cm-s-ipython span.cm-builtin {
+  color: #008000;
+}
+.cm-s-ipython span.cm-bracket {
+  color: #997;
+}
+.cm-s-ipython span.cm-tag {
+  color: #170;
+}
+.cm-s-ipython span.cm-attribute {
+  color: #00c;
+}
+.cm-s-ipython span.cm-header {
+  color: blue;
+}
+.cm-s-ipython span.cm-quote {
+  color: #090;
+}
+.cm-s-ipython span.cm-link {
+  color: #00c;
+}
+.cm-s-ipython span.cm-error {
+  color: #f00;
+}
+.cm-s-ipython span.cm-tab {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+div.output_wrapper {
+  /* this position must be relative to enable descendents to be absolute within it */
+  position: relative;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  z-index: 1;
+}
+/* class for the output area when it should be height-limited */
+div.output_scroll {
+  /* ideally, this would be max-height, but FF barfs all over that */
+  height: 24em;
+  /* FF needs this *and the wrapper* to specify full width, or it will shrinkwrap */
+  width: 100%;
+  overflow: auto;
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  display: block;
+}
+/* output div while it is collapsed */
+div.output_collapsed {
+  margin: 0px;
+  padding: 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+div.out_prompt_overlay {
+  height: 100%;
+  padding: 0px 0.4em;
+  position: absolute;
+  border-radius: 2px;
+}
+div.out_prompt_overlay:hover {
+  /* use inner shadow to get border that is computed the same on WebKit/FF */
+  -webkit-box-shadow: inset 0 0 1px #000;
+  box-shadow: inset 0 0 1px #000;
+  background: rgba(240, 240, 240, 0.5);
+}
+div.output_prompt {
+  color: #D84315;
+}
+/* This class is the outer container of all output sections. */
+div.output_area {
+  padding: 0px;
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.output_area .MathJax_Display {
+  text-align: left !important;
+}
+div.output_area 
+div.output_area 
+div.output_area img,
+div.output_area svg {
+  max-width: 100%;
+  height: auto;
+}
+div.output_area img.unconfined,
+div.output_area svg.unconfined {
+  max-width: none;
+}
+/* This is needed to protect the pre formating from global settings such
+   as that of bootstrap */
+.output {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.output_area {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+div.output_area pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  color: black;
+  background-color: transparent;
+  border-radius: 0;
+}
+/* This class is for the output subarea inside the output_area and after
+   the prompt div. */
+div.output_subarea {
+  overflow-x: auto;
+  padding: 0.4em;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+  max-width: calc(100% - 14ex);
+}
+div.output_scroll div.output_subarea {
+  overflow-x: visible;
+}
+/* The rest of the output_* classes are for special styling of the different
+   output types */
+/* all text output has this class: */
+div.output_text {
+  text-align: left;
+  color: #000;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+}
+/* stdout/stderr are 'text' as well as 'stream', but execute_result/error are *not* streams */
+div.output_stderr {
+  background: #fdd;
+  /* very light red background for stderr */
+}
+div.output_latex {
+  text-align: left;
+}
+/* Empty output_javascript divs should have no height */
+div.output_javascript:empty {
+  padding: 0;
+}
+.js-error {
+  color: darkred;
+}
+/* raw_input styles */
+div.raw_input_container {
+  line-height: 1.21429em;
+  padding-top: 5px;
+}
+pre.raw_input_prompt {
+  /* nothing needed here. */
+}
+input.raw_input {
+  font-family: monospace;
+  font-size: inherit;
+  color: inherit;
+  width: auto;
+  /* make sure input baseline aligns with prompt */
+  vertical-align: baseline;
+  /* padding + margin = 0.5em between prompt and cursor */
+  padding: 0em 0.25em;
+  margin: 0em 0.25em;
+}
+input.raw_input:focus {
+  box-shadow: none;
+}
+p.p-space {
+  margin-bottom: 10px;
+}
+div.output_unrecognized {
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+}
+div.output_unrecognized a {
+  color: inherit;
+  text-decoration: none;
+}
+div.output_unrecognized a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.rendered_html {
+  color: #000;
+  /* any extras will just be numbers: */
+}
+
+
+
+.rendered_html :link {
+  text-decoration: underline;
+}
+.rendered_html :visited {
+  text-decoration: underline;
+}
+
+
+
+
+
+
+.rendered_html h1:first-child {
+  margin-top: 0.538em;
+}
+.rendered_html h2:first-child {
+  margin-top: 0.636em;
+}
+.rendered_html h3:first-child {
+  margin-top: 0.777em;
+}
+.rendered_html h4:first-child {
+  margin-top: 1em;
+}
+.rendered_html h5:first-child {
+  margin-top: 1em;
+}
+.rendered_html h6:first-child {
+  margin-top: 1em;
+}
+
+
+
+
+
+
+
+
+.rendered_html * + ul {
+  margin-top: 1em;
+}
+.rendered_html * + ol {
+  margin-top: 1em;
+}
+
+
+.rendered_html pre,
+
+
+
+.rendered_html tr,
+.rendered_html th,
+
+.rendered_html td,
+
+
+.rendered_html * + table {
+  margin-top: 1em;
+}
+
+.rendered_html * + p {
+  margin-top: 1em;
+}
+
+.rendered_html * + img {
+  margin-top: 1em;
+}
+.rendered_html img,
+
+.rendered_html img.unconfined,
+
+div.text_cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.text_cell > div.prompt {
+    display: none;
+  }
+}
+div.text_cell_render {
+  /*font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;*/
+  outline: none;
+  resize: none;
+  width: inherit;
+  border-style: none;
+  padding: 0.5em 0.5em 0.5em 0.4em;
+  color: #000;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+a.anchor-link:link {
+  text-decoration: none;
+  padding: 0px 20px;
+  visibility: hidden;
+}
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link,
+h5:hover .anchor-link,
+h6:hover .anchor-link {
+  visibility: visible;
+}
+.text_cell.rendered .input_area {
+  display: none;
+}
+.text_cell.rendered 
+.text_cell.unrendered .text_cell_render {
+  display: none;
+}
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.cm-header-1 {
+  font-size: 185.7%;
+}
+.cm-header-2 {
+  font-size: 157.1%;
+}
+.cm-header-3 {
+  font-size: 128.6%;
+}
+.cm-header-4 {
+  font-size: 110%;
+}
+.cm-header-5 {
+  font-size: 100%;
+  font-style: italic;
+}
+.cm-header-6 {
+  font-size: 100%;
+  font-style: italic;
+}
+</style>
+<style type="text/css">.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<style type="text/css">
+/* Temporary definitions which will become obsolete with Notebook release 5.0 */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<!--PELICAN_BEGIN_SUMMARY-->
+<p>follow the principles of tidy data in Jeff Leek's <a href="https://github.com/jtleek/datasharing">guide to data sharing</a>.</p>
+<p>Hadley Wickham's principles of <a href="http://vita.had.co.nz/papers/tidy-data.pdf">Tidy Data</a></p>
+<p>In part 1, we're going to obtain the raw data from OCC.  Examine the contents of the archive, look at the different files types.</p>
+<p>Combine the raw data into a single combined file that we'll use to create tidy datasets of production information (and well location, maybe).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-Raw-Data">The Raw Data<a class="anchor-link" href="#The-Raw-Data">¶</a></h2><h3 id="another-title">another title<a class="anchor-link" href="#another-title">¶</a></h3><p>downloading the file from the <a href="http://www.occeweb.com/og/ogdatafiles2.htm">Oklahoma Corporation Commission</a> website.  We will download the <code>Historical.zip</code> file, which is stated to contain:</p>
+<p><code>Oil/Gas Production Historical Records includes All Production Available from 1987 to 2012 Vertical Bar Delimited</code>.</p>
+<p>File is almost 80 MB.</p>
+<p>Extract the zip archive to <code>data/historical/</code>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">max_rows</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">data_dir</span> <span class="o">=</span> <span class="s1">'data/historical/'</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">urllib</span>
+<span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span> <span class="p">(</span><span class="s1">'ftp://ftp.occ.state.ok.us/OG_DATA/historical.ZIP'</span><span class="p">,</span> <span class="s1">'data/historical.zip'</span><span class="p">)</span>
+
+<span class="c1"># For Python 3, try:</span>
+<span class="c1"># import urllib.request </span>
+<span class="c1"># urllib.request.urlretrieve(url, filename)</span>
+
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="n">zip_ref</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="s1">'data/historical.zip'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+<span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+<span class="n">zip_ref</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Take a look at dir contents</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">'data/historical/'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[2]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>['1987prodn.txt',
+ '1988prodn.txt',
+ '1989prodn.txt',
+ '1990prodn.txt',
+ '1991prodn.txt',
+ '1992prodn.txt',
+ '1993prodn.txt',
+ '1994PRODN.TXT',
+ '1995prodn.txt',
+ '1996prodn.txt',
+ '1997prodn.txt',
+ '1998prodn.txt',
+ '1999prodn.txt',
+ '2000prodn.txt',
+ '2001prodn.txt',
+ '2002prodn.txt',
+ '2003PRODN.TXT',
+ '2004PRODN.TXT',
+ '2005PRODN.TXT',
+ '2006prodn.txt',
+ '2007PRODN.TXT',
+ '2008PRODN.TXT',
+ '2009PRODN.txt',
+ '2010 rbdms extract2013.txt',
+ '2010PRODN.txt',
+ '2011 rbdms extract2013.txt',
+ '2011PRODN.txt',
+ '2012PRODN.txt',
+ '2013prodn.txt',
+ '2014prodn.txt',
+ '2015prodn.txt']</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Production from 1987 to 2015.  We have re-extracted data from 2010 and 2011.  Why?</p>
+<p>Look at contents of early files.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">show_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">nrows</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">islice</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nrows</span><span class="p">):</span>
+            <span class="k">print</span> <span class="n">line</span>
+
+<span class="n">show_file</span><span class="p">(</span><span class="s2">"data/historical/1987prodn.txt"</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+
+API_COUNTY|API_NUMBER|SUFFIX|WELL_NAME                     |WELL_NO|  OPER_NO|OPER_SUFFIX|OPERATOR                                |ME|  SECTION|TWP|RAN|Q4|Q3|Q2|Q1| LATITUDE|LONGITUDE|OTC_COUNTY|OTC_LEASE_NO|OTC_SUB_NO|OTC_MERGE|  POOL_NO|CODE    |FORMATION                               |OFB|ALLOWABLE_CLASS|ALLOWABLE_TYPE| PURCH_NO|PURCHASER                               |PURCH_SUFFIX|OFB|     YEAR|      JAN|      OIL|      GAS|      FEB|      OIL|      GAS|      MAR|      OIL|      GAS|      APR|      OIL|      GAS|      MAY|      OIL|      GAS|      JUN|      OIL|      GAS|      JUL|      OIL|      GAS|      AUG|      OIL|      GAS|      SEP|      OIL|      GAS|      OCT|      OIL|      GAS|      NOV|      OIL|      GAS|      DEC|      OIL|      GAS     
+
+----------|----------|------|------------------------------|-------|---------|-----------|----------------------------------------|--|---------|---|---|--|--|--|--|---------|---------|----------|------------|----------|---------|---------|--------|----------------------------------------|---|---------------|--------------|---------|----------------------------------------|------------|---|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------     
+
+         3|     20404|      |SMITH                         | 1     |    17441|          0|CHESAPEAKE OPERATING INC                |IM|       19|24N|12W|  |  |NW|SE| 36.54099|-98.52307|         3|       48518|         0|        0|         |000UNKN |UNKNOWN FORMATION                       |Y  |               |              |     6332|MID PLAINS PETROLEUM COMPANY            |           0|N  |     1987|        1|         |         |        2|         |         |        3|         |         |        4|         |         |        5|         |         |        6|         |         |        7|         |         |        8|         |         |        9|         |         |       10|         |         |       11|      177|         |       12|      162|              
+
+         7|        25|      |E E EVANS                     | 1     |     5415|          0|SAMSON RESOURCES COMPANY                |CM|        8|05N|25E|  |  |NE|SW|36.912313|-100.3791|         7|       28830|         0|        0|         |402MWCR |MORROW-CHESTER                          |N  |UG             |S             |      458|COLORADO INTERSTATE GAS CO              |           0|N  |     1987|        1|         |         |        2|         |         |        3|         |         |        4|         |         |        5|         |         |        6|         |         |        7|         |         |        8|         |         |        9|         |    15271|       10|         |      182|       11|         |     8388|       12|         |    10850     
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Explain this file format. 69 column types, storing all different kinds of data.  Many not used.  Rich data set, but could certainly use a bit of tidying.</p>
+<p>Look at more recent files:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">show_file</span><span class="p">(</span><span class="s2">"data/historical/2015prodn.txt"</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>API_COUNTY|API_NUMBER|S|WELL_NAME|WELL_NO|OPER_NO|OPERATOR|ME|SECTION|TWP|RAN|Q4|Q3|Q2|Q1|LATITUDE|LONGITUDE|OTC_COUNTY|OTC_LEASE_NO|OTC_SUB_NO|OTC_MERGE|POOL_NO|CODE|FORMATION|OFB|ALLOWABLE_CLASS|ALLOWABLE_TYPE|PURCH_NO|PURCHASER|YEAR|JAN|OIL|GAS|FEB|OIL|GAS|MAR|OIL|GAS|APR|OIL|GAS|MAY|OIL|GAS|JUN|OIL|GAS|JUL|OIL|GAS|AUG|OIL|GAS|SEP|OIL|GAS|OCT|OIL|GAS|NOV|OIL|GAS|DEC|OIL|GAS
+
+003|00001||KIRCHER                       |     1|4030|CHAMPLIN EXPLORATION INC|INDIAN|4|27N|11W|||CNE4|NW4|36.8532|-98.3895|003|||||351MISS|MISSISSIPPI||||||2015|1||0|2||12|3||0|4||0|5|||6|||7|||8|||9|||10|||11|||12||
+
+003|00025||HAGUE                         |     1|19694|BVD INC|Indian|22|27N|11W|    |    |CSE4|SE4 |36.7989|-98.3624|003|||||404CHRK|CHEROKEE||||||2015|1||81|2||69|3||60|4||38|5||42|6||45|7||36|8||32|9||31|10||39|11||37|12||45
+
+003|00068||ADAMS   "A"                   |1-3   |17441|CHESAPEAKE OPERATING LLC|Indian|3|25N|10W|    |    |SW4 |SW4 |36.6683|-98.2678|003|||||404OSWGU|OSWEGO UP||||||2015|1||0|2||0|3||0|4||0|5||0|6||0|7||0|8||0|9||0|10||0|11||0|12||
+
+003|00071||NEWLIN                        |     1|7775|COMBINED RESOURCES CORPORATION|Indian|19|25N|12W|    |    |CSW4|SE4 |36.6247|-98.5292|003|||||404CHRK|CHEROKEE||||||2015|1||1395|2||876|3||1588|4||1351|5||1378|6||1484|7||1504|8||1351|9||1089|10||1089|11||873|12||512
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Discuss this file format.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>American Petroleum Institute defines an API well number.  Details on this can be found on <a href="https://en.wikipedia.org/wiki/API_well_number">wikipedia</a>, DrillingInfo also has a nice <a href="https://info.drillinginfo.com/api-number-dead-long-live-us-well-number/">summary</a>. 
+First ten digits give the well's surface locatin.</p>
+<p>First two digits are the State Code. 35 for OK.</p>
+<p>Next three digits are the County Code.  API_COUNTY field.</p>
+<p>Next five digits are the Unique Well Identifier.  API_Number field.</p>
+<p>Next two digits (digits 11 and 12) are the Directional Sidetrack Codes.
+No official standard for final two, other than being reserved for Event Sequence Codes.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#generate a list of years that will be used to form filenames</span>
+<span class="n">years</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1988</span><span class="p">,</span> <span class="mi">2016</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">#list to track the dataframes from each year that will be </span>
+<span class="c1">#concatenated after processing</span>
+<span class="n">annual_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
+    
+    <span class="c1">#data for 1994 is missing, so ignore this year</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">year</span> <span class="o">==</span> <span class="mi">1994</span><span class="p">):</span>
+        <span class="k">continue</span>
+    
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)</span><span class="o">+</span><span class="s1">'prodn.txt'</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Reading </span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="k">filename</span>)
+    
+    <span class="c1">#the file format is different for years 2008 and before</span>
+    <span class="c1">#so these files need to be handled differently</span>
+    <span class="c1">#</span>
+    <span class="c1">#there are 6 lines in years between 1990 and 1995 that have</span>
+    <span class="c1">#an extra field.  This could be due to an extra delimiter</span>
+    <span class="c1">#'|' in the line.  These are ignored.</span>
+    <span class="k">if</span> <span class="n">year</span> <span class="o"><=</span> <span class="mi">2008</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"|"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> 
+                        <span class="n">doublequote</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">error_bad_lines</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                        <span class="n">low_memory</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        
+        <span class="c1">#remove the first row with ------</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        
+        <span class="c1">#remove the whitespace from the column names</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        
+        <span class="c1">#these columns don't appear in the later years, so drop</span>
+        <span class="c1">#them now for consistency</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'PURCH_SUFFIX'</span><span class="p">,</span> <span class="s1">'OPER_SUFFIX'</span><span class="p">,</span> <span class="s1">'OFB.1'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+                <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                
+        <span class="c1">#the last Gas column for December will be incorrectly</span>
+        <span class="c1">#named because of whitespace.  Rename it manually now</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'GAS.11'</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#the files for 2009 and later are much cleaner and </span>
+        <span class="c1">#require less processing</span>
+        
+        <span class="c1">#Sometimes there is an extra line at the top at the file</span>
+        <span class="c1"># that contains the string 'ExtractRecord'.  If this </span>
+        <span class="c1"># is the case, ignore the first line</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">first_line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">'API_NUMBER'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">first_line</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"|"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> 
+            <span class="n">doublequote</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">error_bad_lines</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"|"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> 
+                        <span class="n">doublequote</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">error_bad_lines</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="c1"># remove any entries that don't have a valid well number</span>
+    <span class="c1"># some files (like 2004 & 2005) have a row with </span>
+    <span class="c1"># '39949 rows selected.' at the bottom.  Most of this row</span>
+    <span class="c1"># will have NaN values, and will cause problems.  Remove</span>
+    <span class="c1"># them.</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'API_NUMBER'</span><span class="p">])]</span>
+    
+    <span class="n">annual_data</span><span class="p">[</span><span class="n">year</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Reading data/historical/1988prodn.txt
+Reading data/historical/1989prodn.txt
+Reading data/historical/1990prodn.txt
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Skipping line 19661: expected 69 fields, saw 70
+Skipping line 19662: expected 69 fields, saw 70
+
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Reading data/historical/1991prodn.txt
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Skipping line 20832: expected 69 fields, saw 70
+
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Reading data/historical/1992prodn.txt
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Skipping line 17081: expected 69 fields, saw 70
+
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Reading data/historical/1993prodn.txt
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Skipping line 11718: expected 69 fields, saw 70
+
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Reading data/historical/1995prodn.txt
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Skipping line 23792: expected 69 fields, saw 70
+
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Reading data/historical/1996prodn.txt
+Reading data/historical/1997prodn.txt
+Reading data/historical/1998prodn.txt
+Reading data/historical/1999prodn.txt
+Reading data/historical/2000prodn.txt
+Reading data/historical/2001prodn.txt
+Reading data/historical/2002prodn.txt
+Reading data/historical/2003prodn.txt
+Reading data/historical/2004prodn.txt
+Reading data/historical/2005prodn.txt
+Reading data/historical/2006prodn.txt
+Reading data/historical/2007prodn.txt
+Reading data/historical/2008prodn.txt
+Reading data/historical/2009prodn.txt
+Reading data/historical/2010prodn.txt
+Reading data/historical/2011prodn.txt
+Reading data/historical/2012prodn.txt
+Reading data/historical/2013prodn.txt
+Reading data/historical/2014prodn.txt
+Reading data/historical/2015prodn.txt
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [37]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">annual_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [33]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#Form the full unique API number by concatenating the </span>
+<span class="c1"># Okalhoma state code '35' with the API_COUNTY and </span>
+<span class="c1"># API_NUMBER fields</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">'API_NUMBER'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'API_NUMBER'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">raise_on_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">'{0:0>5}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">'API_COUNTY'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'API_COUNTY'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">raise_on_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">'{0:0>3}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">'ENTITY_ID'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'35'</span><span class="o">+</span><span class="n">data</span><span class="p">[</span><span class="s1">'API_COUNTY'</span><span class="p">]</span><span class="o">+</span><span class="n">data</span><span class="p">[</span><span class="s1">'API_NUMBER'</span><span class="p">]</span><span class="o">+</span><span class="s1">'0000'</span>
+
+<span class="n">prod_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">'GAS'</span><span class="p">,</span> <span class="s1">'OIL'</span><span class="p">,</span> <span class="s1">'GAS.1'</span><span class="p">,</span> <span class="s1">'OIL.1'</span><span class="p">,</span> <span class="s1">'GAS.2'</span><span class="p">,</span> 
+             <span class="s1">'OIL.2'</span><span class="p">,</span> <span class="s1">'GAS.3'</span><span class="p">,</span> <span class="s1">'OIL.3'</span><span class="p">,</span> <span class="s1">'GAS.4'</span><span class="p">,</span> <span class="s1">'OIL.4'</span><span class="p">,</span>
+             <span class="s1">'GAS.5'</span><span class="p">,</span> <span class="s1">'OIL.5'</span><span class="p">,</span> <span class="s1">'GAS.6'</span><span class="p">,</span> <span class="s1">'OIL.6'</span><span class="p">,</span> <span class="s1">'GAS.7'</span><span class="p">,</span> 
+             <span class="s1">'OIL.7'</span><span class="p">,</span> <span class="s1">'GAS.8'</span><span class="p">,</span> <span class="s1">'OIL.8'</span><span class="p">,</span> <span class="s1">'GAS.9'</span><span class="p">,</span> <span class="s1">'OIL.9'</span><span class="p">,</span>
+             <span class="s1">'GAS.10'</span><span class="p">,</span> <span class="s1">'OIL.10'</span><span class="p">,</span> <span class="s1">'GAS.11'</span><span class="p">,</span> <span class="s1">'OIL.11'</span><span class="p">,</span>
+             <span class="s1">'ENTITY_ID'</span><span class="p">,</span> <span class="s1">'YEAR'</span><span class="p">]]</span>
+
+<span class="c1">#data.apply(pd.to_numeric, errors='ignore')</span>
+<span class="c1">#convert the data type of all OIL and GAS columns to numeric</span>
+<span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">prod_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">'GAS'</span> <span class="ow">in</span> <span class="n">col_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">'OIL'</span> <span class="ow">in</span> <span class="n">col_name</span><span class="p">):</span>
+        <span class="n">prod_data</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">prod_data</span><span class="p">[</span><span class="n">col_name</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+
+<span class="c1">#rename the oil and gas montly totals to something more</span>
+<span class="c1">#descriptive</span>
+<span class="n">prod_data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'GAS'</span><span class="p">:</span> <span class="s1">'GAS - January'</span><span class="p">,</span>
+                     <span class="s1">'OIL'</span><span class="p">:</span> <span class="s1">'OIL - January'</span><span class="p">,</span>
+                     <span class="s1">'GAS.1'</span><span class="p">:</span> <span class="s1">'GAS - February'</span><span class="p">,</span>
+                     <span class="s1">'OIL.1'</span><span class="p">:</span> <span class="s1">'OIL - February'</span><span class="p">,</span>
+                     <span class="s1">'GAS.2'</span><span class="p">:</span> <span class="s1">'GAS - March'</span><span class="p">,</span>
+                     <span class="s1">'OIL.2'</span><span class="p">:</span> <span class="s1">'OIL - March'</span><span class="p">,</span>
+                     <span class="s1">'GAS.3'</span><span class="p">:</span> <span class="s1">'GAS - April '</span><span class="p">,</span>
+                     <span class="s1">'OIL.3'</span><span class="p">:</span> <span class="s1">'OIL - April'</span><span class="p">,</span>
+                     <span class="s1">'GAS.4'</span><span class="p">:</span> <span class="s1">'GAS - May'</span><span class="p">,</span>
+                     <span class="s1">'OIL.4'</span><span class="p">:</span> <span class="s1">'OIL - May'</span><span class="p">,</span>
+                     <span class="s1">'GAS.5'</span><span class="p">:</span> <span class="s1">'GAS - June'</span><span class="p">,</span>
+                     <span class="s1">'OIL.5'</span><span class="p">:</span> <span class="s1">'OIL - June'</span><span class="p">,</span>
+                     <span class="s1">'GAS.6'</span><span class="p">:</span> <span class="s1">'GAS - July'</span><span class="p">,</span>
+                     <span class="s1">'OIL.6'</span><span class="p">:</span> <span class="s1">'OIL - July'</span><span class="p">,</span>
+                     <span class="s1">'GAS.7'</span><span class="p">:</span> <span class="s1">'GAS - August'</span><span class="p">,</span>
+                     <span class="s1">'OIL.7'</span><span class="p">:</span> <span class="s1">'OIL - August'</span><span class="p">,</span>
+                     <span class="s1">'GAS.8'</span><span class="p">:</span> <span class="s1">'GAS - September'</span><span class="p">,</span>
+                     <span class="s1">'OIL.8'</span><span class="p">:</span> <span class="s1">'OIL - September'</span><span class="p">,</span>
+                     <span class="s1">'GAS.9'</span><span class="p">:</span> <span class="s1">'GAS - October'</span><span class="p">,</span>
+                     <span class="s1">'OIL.9'</span><span class="p">:</span> <span class="s1">'OIL - October'</span><span class="p">,</span>
+                     <span class="s1">'GAS.10'</span><span class="p">:</span> <span class="s1">'GAS - November'</span><span class="p">,</span>
+                     <span class="s1">'OIL.10'</span><span class="p">:</span> <span class="s1">'OIL - November'</span><span class="p">,</span>
+                     <span class="s1">'GAS.11'</span><span class="p">:</span> <span class="s1">'GAS - December'</span><span class="p">,</span>
+                     <span class="s1">'OIL.11'</span><span class="p">:</span> <span class="s1">'OIL - December'</span><span class="p">,</span>
+                     <span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1">#some entity id's have multiple entries.  I do not know </span>
+<span class="c1">#why this is.  it appears like they might be the production</span>
+<span class="c1">#attributed to different owners. try summing the production</span>
+<span class="c1">#for now...</span>
+<span class="n">prod_data</span> <span class="o">=</span> <span class="n">prod_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">'ENTITY_ID'</span><span class="p">,</span><span class="s1">'YEAR'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">prod_data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/bhall/Library/Enthought/Canopy_64bit/User/lib/python2.7/site-packages/ipykernel/__main__.py:19: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [34]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">prod_data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[34]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>ENTITY_ID</th>
+<th>YEAR</th>
+<th>GAS - January</th>
+<th>OIL - January</th>
+<th>GAS - February</th>
+<th>OIL - February</th>
+<th>GAS - March</th>
+<th>OIL - March</th>
+<th>GAS - April</th>
+<th>OIL - April</th>
+<th>...</th>
+<th>GAS - August</th>
+<th>OIL - August</th>
+<th>GAS - September</th>
+<th>OIL - September</th>
+<th>GAS - October</th>
+<th>OIL - October</th>
+<th>GAS - November</th>
+<th>OIL - November</th>
+<th>GAS - December</th>
+<th>OIL - December</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>35003000010000</td>
+<td>2009</td>
+<td>1312.0</td>
+<td>NaN</td>
+<td>957.0</td>
+<td>NaN</td>
+<td>1242.0</td>
+<td>NaN</td>
+<td>1165.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1091.0</td>
+<td>NaN</td>
+<td>1033.0</td>
+<td>NaN</td>
+<td>931.0</td>
+<td>NaN</td>
+<td>993.0</td>
+<td>NaN</td>
+<td>1264.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>1</th>
+<td>35003000010000</td>
+<td>2010</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>1133.0</td>
+<td>NaN</td>
+<td>939.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>673.0</td>
+<td>NaN</td>
+<td>823.0</td>
+<td>NaN</td>
+<td>871.0</td>
+<td>NaN</td>
+<td>906.0</td>
+<td>NaN</td>
+<td>878.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>2</th>
+<td>35003000010000</td>
+<td>2011</td>
+<td>873.0</td>
+<td>NaN</td>
+<td>809.0</td>
+<td>NaN</td>
+<td>936.0</td>
+<td>NaN</td>
+<td>946.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>892.0</td>
+<td>NaN</td>
+<td>772.0</td>
+<td>NaN</td>
+<td>725.0</td>
+<td>NaN</td>
+<td>851.0</td>
+<td>NaN</td>
+<td>713.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>3</th>
+<td>35003000010000</td>
+<td>2012</td>
+<td>829.0</td>
+<td>NaN</td>
+<td>766.0</td>
+<td>NaN</td>
+<td>491.0</td>
+<td>NaN</td>
+<td>564.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>668.0</td>
+<td>NaN</td>
+<td>695.0</td>
+<td>NaN</td>
+<td>609.0</td>
+<td>NaN</td>
+<td>539.0</td>
+<td>NaN</td>
+<td>351.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>4</th>
+<td>35003000010000</td>
+<td>2013</td>
+<td>822.0</td>
+<td>NaN</td>
+<td>379.0</td>
+<td>NaN</td>
+<td>361.0</td>
+<td>NaN</td>
+<td>318.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>626.0</td>
+<td>NaN</td>
+<td>486.0</td>
+<td>NaN</td>
+<td>808.0</td>
+<td>NaN</td>
+<td>644.0</td>
+<td>NaN</td>
+<td>493.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>5</th>
+<td>35003000010000</td>
+<td>2014</td>
+<td>516.0</td>
+<td>NaN</td>
+<td>584.0</td>
+<td>NaN</td>
+<td>400.0</td>
+<td>NaN</td>
+<td>596.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>591.0</td>
+<td>NaN</td>
+<td>719.0</td>
+<td>NaN</td>
+<td>751.0</td>
+<td>NaN</td>
+<td>635.0</td>
+<td>NaN</td>
+<td>388.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>6</th>
+<td>35003000010000</td>
+<td>2015</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>12.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>7</th>
+<td>35003000010000</td>
+<td>2001</td>
+<td>2477.0</td>
+<td>NaN</td>
+<td>2236.0</td>
+<td>NaN</td>
+<td>2484.0</td>
+<td>NaN</td>
+<td>2389.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2378.0</td>
+<td>NaN</td>
+<td>2123.0</td>
+<td>NaN</td>
+<td>2514.0</td>
+<td>NaN</td>
+<td>2087.0</td>
+<td>NaN</td>
+<td>2303.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>8</th>
+<td>35003000010000</td>
+<td>2002</td>
+<td>2450.0</td>
+<td>NaN</td>
+<td>2073.0</td>
+<td>NaN</td>
+<td>2320.0</td>
+<td>NaN</td>
+<td>2121.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1574.0</td>
+<td>NaN</td>
+<td>2270.0</td>
+<td>NaN</td>
+<td>2264.0</td>
+<td>NaN</td>
+<td>2097.0</td>
+<td>NaN</td>
+<td>2173.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>9</th>
+<td>35003000010000</td>
+<td>2003</td>
+<td>2531.0</td>
+<td>NaN</td>
+<td>1889.0</td>
+<td>NaN</td>
+<td>2186.0</td>
+<td>NaN</td>
+<td>2072.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1997.0</td>
+<td>NaN</td>
+<td>2094.0</td>
+<td>NaN</td>
+<td>2237.0</td>
+<td>NaN</td>
+<td>2118.0</td>
+<td>NaN</td>
+<td>2316.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>10</th>
+<td>35003000010000</td>
+<td>2004</td>
+<td>2118.0</td>
+<td>NaN</td>
+<td>2045.0</td>
+<td>NaN</td>
+<td>2035.0</td>
+<td>NaN</td>
+<td>2058.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1864.0</td>
+<td>NaN</td>
+<td>1841.0</td>
+<td>NaN</td>
+<td>1857.0</td>
+<td>NaN</td>
+<td>1236.0</td>
+<td>NaN</td>
+<td>2235.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>11</th>
+<td>35003000010000</td>
+<td>2005</td>
+<td>1950.0</td>
+<td>NaN</td>
+<td>1589.0</td>
+<td>NaN</td>
+<td>1842.0</td>
+<td>NaN</td>
+<td>1724.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1702.0</td>
+<td>NaN</td>
+<td>1484.0</td>
+<td>NaN</td>
+<td>1626.0</td>
+<td>NaN</td>
+<td>1730.0</td>
+<td>NaN</td>
+<td>1342.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>12</th>
+<td>35003000010000</td>
+<td>2006</td>
+<td>1442.0</td>
+<td>NaN</td>
+<td>1241.0</td>
+<td>NaN</td>
+<td>1114.0</td>
+<td>NaN</td>
+<td>1894.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1886.0</td>
+<td>NaN</td>
+<td>1810.0</td>
+<td>NaN</td>
+<td>1970.0</td>
+<td>NaN</td>
+<td>1933.0</td>
+<td>NaN</td>
+<td>1961.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>13</th>
+<td>35003000010000</td>
+<td>2007</td>
+<td>1945.0</td>
+<td>NaN</td>
+<td>1754.0</td>
+<td>NaN</td>
+<td>1843.0</td>
+<td>NaN</td>
+<td>1775.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1574.0</td>
+<td>NaN</td>
+<td>1539.0</td>
+<td>NaN</td>
+<td>1461.0</td>
+<td>NaN</td>
+<td>1653.0</td>
+<td>NaN</td>
+<td>1678.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>14</th>
+<td>35003000010000</td>
+<td>2008</td>
+<td>1569.0</td>
+<td>NaN</td>
+<td>1548.0</td>
+<td>NaN</td>
+<td>1403.0</td>
+<td>NaN</td>
+<td>1265.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1177.0</td>
+<td>NaN</td>
+<td>1203.0</td>
+<td>NaN</td>
+<td>1130.0</td>
+<td>NaN</td>
+<td>1114.0</td>
+<td>NaN</td>
+<td>1173.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>15</th>
+<td>35003000120000</td>
+<td>1990</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>140.0</td>
+<td>NaN</td>
+<td>154.0</td>
+<td>NaN</td>
+<td>110.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>16</th>
+<td>35003000250000</td>
+<td>2009</td>
+<td>31.0</td>
+<td>NaN</td>
+<td>19.0</td>
+<td>NaN</td>
+<td>24.0</td>
+<td>NaN</td>
+<td>30.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>59.0</td>
+<td>NaN</td>
+<td>54.0</td>
+<td>NaN</td>
+<td>40.0</td>
+<td>NaN</td>
+<td>42.0</td>
+<td>NaN</td>
+<td>31.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>17</th>
+<td>35003000250000</td>
+<td>2010</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>18.0</td>
+<td>NaN</td>
+<td>31.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>55.0</td>
+<td>NaN</td>
+<td>48.0</td>
+<td>NaN</td>
+<td>79.0</td>
+<td>NaN</td>
+<td>64.0</td>
+<td>NaN</td>
+<td>59.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>18</th>
+<td>35003000250000</td>
+<td>2011</td>
+<td>70.0</td>
+<td>NaN</td>
+<td>55.0</td>
+<td>NaN</td>
+<td>51.0</td>
+<td>NaN</td>
+<td>43.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>42.0</td>
+<td>NaN</td>
+<td>52.0</td>
+<td>NaN</td>
+<td>53.0</td>
+<td>NaN</td>
+<td>38.0</td>
+<td>NaN</td>
+<td>46.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>19</th>
+<td>35003000250000</td>
+<td>2012</td>
+<td>50.0</td>
+<td>NaN</td>
+<td>85.0</td>
+<td>NaN</td>
+<td>111.0</td>
+<td>NaN</td>
+<td>125.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>102.0</td>
+<td>NaN</td>
+<td>52.0</td>
+<td>NaN</td>
+<td>34.0</td>
+<td>NaN</td>
+<td>25.0</td>
+<td>NaN</td>
+<td>29.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>20</th>
+<td>35003000250000</td>
+<td>2013</td>
+<td>24.0</td>
+<td>NaN</td>
+<td>35.0</td>
+<td>NaN</td>
+<td>42.0</td>
+<td>NaN</td>
+<td>41.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>66.0</td>
+<td>NaN</td>
+<td>65.0</td>
+<td>NaN</td>
+<td>73.0</td>
+<td>NaN</td>
+<td>76.0</td>
+<td>NaN</td>
+<td>81.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>21</th>
+<td>35003000250000</td>
+<td>2014</td>
+<td>60.0</td>
+<td>NaN</td>
+<td>164.0</td>
+<td>NaN</td>
+<td>135.0</td>
+<td>NaN</td>
+<td>160.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>89.0</td>
+<td>NaN</td>
+<td>79.0</td>
+<td>NaN</td>
+<td>66.0</td>
+<td>NaN</td>
+<td>67.0</td>
+<td>NaN</td>
+<td>72.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>22</th>
+<td>35003000250000</td>
+<td>2015</td>
+<td>81.0</td>
+<td>NaN</td>
+<td>69.0</td>
+<td>NaN</td>
+<td>60.0</td>
+<td>NaN</td>
+<td>38.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>32.0</td>
+<td>NaN</td>
+<td>31.0</td>
+<td>NaN</td>
+<td>39.0</td>
+<td>NaN</td>
+<td>37.0</td>
+<td>NaN</td>
+<td>45.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>23</th>
+<td>35003000250000</td>
+<td>1990</td>
+<td>995.0</td>
+<td>NaN</td>
+<td>699.0</td>
+<td>NaN</td>
+<td>614.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>396.0</td>
+<td>NaN</td>
+<td>425.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>583.0</td>
+<td>NaN</td>
+<td>923.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>24</th>
+<td>35003000250000</td>
+<td>1991</td>
+<td>1086.0</td>
+<td>NaN</td>
+<td>1016.0</td>
+<td>NaN</td>
+<td>1140.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>25</th>
+<td>35003000250000</td>
+<td>1992</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>138.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>26</th>
+<td>35003000250000</td>
+<td>1995</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>27</th>
+<td>35003000250000</td>
+<td>1998</td>
+<td>105.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>691.0</td>
+<td>NaN</td>
+<td>566.0</td>
+<td>NaN</td>
+<td>564.0</td>
+<td>NaN</td>
+<td>286.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>28</th>
+<td>35003000250000</td>
+<td>1999</td>
+<td>195.0</td>
+<td>NaN</td>
+<td>168.0</td>
+<td>NaN</td>
+<td>158.0</td>
+<td>NaN</td>
+<td>133.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>184.0</td>
+<td>NaN</td>
+<td>149.0</td>
+<td>NaN</td>
+<td>171.0</td>
+<td>NaN</td>
+<td>148.0</td>
+<td>NaN</td>
+<td>279.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>29</th>
+<td>35003000250000</td>
+<td>2000</td>
+<td>301.0</td>
+<td>NaN</td>
+<td>212.0</td>
+<td>NaN</td>
+<td>169.0</td>
+<td>NaN</td>
+<td>158.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>131.0</td>
+<td>NaN</td>
+<td>129.0</td>
+<td>NaN</td>
+<td>155.0</td>
+<td>NaN</td>
+<td>145.0</td>
+<td>NaN</td>
+<td>142.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>780296</th>
+<td>35153500060000</td>
+<td>1990</td>
+<td>318.0</td>
+<td>NaN</td>
+<td>311.0</td>
+<td>NaN</td>
+<td>31.0</td>
+<td>NaN</td>
+<td>351.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780297</th>
+<td>35153500090000</td>
+<td>2009</td>
+<td>1038.0</td>
+<td>NaN</td>
+<td>1037.0</td>
+<td>NaN</td>
+<td>1118.0</td>
+<td>NaN</td>
+<td>1091.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1113.0</td>
+<td>NaN</td>
+<td>1097.0</td>
+<td>NaN</td>
+<td>1089.0</td>
+<td>NaN</td>
+<td>999.0</td>
+<td>NaN</td>
+<td>960.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780298</th>
+<td>35153500090000</td>
+<td>2010</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>980.0</td>
+<td>NaN</td>
+<td>947.0</td>
+<td>NaN</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>947.0</td>
+<td>NaN</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>1022.0</td>
+<td>NaN</td>
+<td>1752.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780299</th>
+<td>35153500090000</td>
+<td>2011</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>952.0</td>
+<td>NaN</td>
+<td>982.0</td>
+<td>NaN</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>962.0</td>
+<td>NaN</td>
+<td>963.0</td>
+<td>NaN</td>
+<td>911.0</td>
+<td>NaN</td>
+<td>921.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780300</th>
+<td>35153500090000</td>
+<td>2013</td>
+<td>2250.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>628.0</td>
+<td>NaN</td>
+<td>953.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>994.0</td>
+<td>NaN</td>
+<td>963.0</td>
+<td>NaN</td>
+<td>965.0</td>
+<td>NaN</td>
+<td>927.0</td>
+<td>NaN</td>
+<td>885.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780301</th>
+<td>35153500090000</td>
+<td>2014</td>
+<td>857.0</td>
+<td>NaN</td>
+<td>895.0</td>
+<td>NaN</td>
+<td>964.0</td>
+<td>NaN</td>
+<td>923.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>973.0</td>
+<td>NaN</td>
+<td>919.0</td>
+<td>NaN</td>
+<td>921.0</td>
+<td>NaN</td>
+<td>878.0</td>
+<td>NaN</td>
+<td>747.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780302</th>
+<td>35153500090000</td>
+<td>2015</td>
+<td>725.0</td>
+<td>NaN</td>
+<td>827.0</td>
+<td>NaN</td>
+<td>922.0</td>
+<td>NaN</td>
+<td>814.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>914.0</td>
+<td>NaN</td>
+<td>778.0</td>
+<td>NaN</td>
+<td>953.0</td>
+<td>NaN</td>
+<td>883.0</td>
+<td>NaN</td>
+<td>876.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780303</th>
+<td>35153500090000</td>
+<td>1988</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>7077.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>5435.0</td>
+<td>NaN</td>
+<td>6234.0</td>
+<td>NaN</td>
+<td>4768.0</td>
+<td>NaN</td>
+<td>5816.0</td>
+<td>NaN</td>
+<td>3122.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780304</th>
+<td>35153500090000</td>
+<td>1989</td>
+<td>5192.0</td>
+<td>NaN</td>
+<td>5125.0</td>
+<td>NaN</td>
+<td>10503.0</td>
+<td>NaN</td>
+<td>4855.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>5315.0</td>
+<td>NaN</td>
+<td>3583.0</td>
+<td>NaN</td>
+<td>4053.0</td>
+<td>NaN</td>
+<td>3487.0</td>
+<td>NaN</td>
+<td>3274.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780305</th>
+<td>35153500090000</td>
+<td>1990</td>
+<td>5286.0</td>
+<td>NaN</td>
+<td>4192.0</td>
+<td>NaN</td>
+<td>4352.0</td>
+<td>NaN</td>
+<td>3981.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>4598.0</td>
+<td>NaN</td>
+<td>754.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780306</th>
+<td>35153500090000</td>
+<td>1999</td>
+<td>1527.0</td>
+<td>NaN</td>
+<td>993.0</td>
+<td>NaN</td>
+<td>1751.0</td>
+<td>NaN</td>
+<td>2216.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2311.0</td>
+<td>NaN</td>
+<td>1590.0</td>
+<td>NaN</td>
+<td>1902.0</td>
+<td>NaN</td>
+<td>1668.0</td>
+<td>NaN</td>
+<td>1329.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780307</th>
+<td>35153500090000</td>
+<td>2000</td>
+<td>1828.0</td>
+<td>NaN</td>
+<td>1431.0</td>
+<td>NaN</td>
+<td>1754.0</td>
+<td>NaN</td>
+<td>1849.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>233.0</td>
+<td>NaN</td>
+<td>1999.0</td>
+<td>NaN</td>
+<td>1475.0</td>
+<td>NaN</td>
+<td>1154.0</td>
+<td>NaN</td>
+<td>600.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780308</th>
+<td>35153500090000</td>
+<td>2001</td>
+<td>447.0</td>
+<td>NaN</td>
+<td>723.0</td>
+<td>NaN</td>
+<td>1911.0</td>
+<td>NaN</td>
+<td>1729.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1794.0</td>
+<td>NaN</td>
+<td>1676.0</td>
+<td>NaN</td>
+<td>1416.0</td>
+<td>NaN</td>
+<td>1083.0</td>
+<td>NaN</td>
+<td>1274.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780309</th>
+<td>35153500090000</td>
+<td>2002</td>
+<td>860.0</td>
+<td>NaN</td>
+<td>1330.0</td>
+<td>NaN</td>
+<td>1399.0</td>
+<td>NaN</td>
+<td>1351.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1358.0</td>
+<td>NaN</td>
+<td>1335.0</td>
+<td>NaN</td>
+<td>1546.0</td>
+<td>NaN</td>
+<td>1157.0</td>
+<td>NaN</td>
+<td>1118.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780310</th>
+<td>35153500090000</td>
+<td>2003</td>
+<td>727.0</td>
+<td>NaN</td>
+<td>892.0</td>
+<td>NaN</td>
+<td>971.0</td>
+<td>NaN</td>
+<td>1632.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1329.0</td>
+<td>NaN</td>
+<td>1560.0</td>
+<td>NaN</td>
+<td>1579.0</td>
+<td>NaN</td>
+<td>1453.0</td>
+<td>NaN</td>
+<td>1246.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780311</th>
+<td>35153500090000</td>
+<td>2004</td>
+<td>1489.0</td>
+<td>NaN</td>
+<td>1280.0</td>
+<td>NaN</td>
+<td>1363.0</td>
+<td>NaN</td>
+<td>1536.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1127.0</td>
+<td>NaN</td>
+<td>1273.0</td>
+<td>NaN</td>
+<td>1136.0</td>
+<td>NaN</td>
+<td>1264.0</td>
+<td>NaN</td>
+<td>1130.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780312</th>
+<td>35153500090000</td>
+<td>2005</td>
+<td>1103.0</td>
+<td>NaN</td>
+<td>1510.0</td>
+<td>NaN</td>
+<td>1333.0</td>
+<td>NaN</td>
+<td>1390.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1466.0</td>
+<td>NaN</td>
+<td>880.0</td>
+<td>NaN</td>
+<td>967.0</td>
+<td>NaN</td>
+<td>858.0</td>
+<td>NaN</td>
+<td>1168.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780313</th>
+<td>35153500090000</td>
+<td>2006</td>
+<td>1290.0</td>
+<td>NaN</td>
+<td>1054.0</td>
+<td>NaN</td>
+<td>1373.0</td>
+<td>NaN</td>
+<td>1435.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1420.0</td>
+<td>NaN</td>
+<td>1349.0</td>
+<td>NaN</td>
+<td>1111.0</td>
+<td>NaN</td>
+<td>1402.0</td>
+<td>NaN</td>
+<td>1280.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780314</th>
+<td>35153500090000</td>
+<td>2007</td>
+<td>1110.0</td>
+<td>NaN</td>
+<td>972.0</td>
+<td>NaN</td>
+<td>1203.0</td>
+<td>NaN</td>
+<td>1163.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1224.0</td>
+<td>NaN</td>
+<td>1129.0</td>
+<td>NaN</td>
+<td>1146.0</td>
+<td>NaN</td>
+<td>1053.0</td>
+<td>NaN</td>
+<td>786.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780315</th>
+<td>35153500090000</td>
+<td>2008</td>
+<td>1119.0</td>
+<td>NaN</td>
+<td>1119.0</td>
+<td>NaN</td>
+<td>1204.0</td>
+<td>NaN</td>
+<td>1153.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1201.0</td>
+<td>NaN</td>
+<td>1098.0</td>
+<td>NaN</td>
+<td>1135.0</td>
+<td>NaN</td>
+<td>1098.0</td>
+<td>NaN</td>
+<td>1080.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780316</th>
+<td>35153500150000</td>
+<td>1990</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>3598.0</td>
+<td>NaN</td>
+<td>4412.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>6791.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>3332.0</td>
+<td>NaN</td>
+<td>4288.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780317</th>
+<td>35153500150000</td>
+<td>1991</td>
+<td>4746.0</td>
+<td>NaN</td>
+<td>6282.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>4378.0</td>
+<td>NaN</td>
+<td>5923.0</td>
+<td>NaN</td>
+<td>5734.0</td>
+<td>1765.0</td>
+<td>NaN</td>
+<td>905.0</td>
+<td>3152.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780318</th>
+<td>35153500150000</td>
+<td>1992</td>
+<td>2213.0</td>
+<td>1589.0</td>
+<td>NaN</td>
+<td>1390.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780319</th>
+<td>35153500150000</td>
+<td>1993</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>3962.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780320</th>
+<td>35153500150000</td>
+<td>1995</td>
+<td>6122.0</td>
+<td>NaN</td>
+<td>5903.0</td>
+<td>NaN</td>
+<td>3822.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>5465.0</td>
+<td>NaN</td>
+<td>5158.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>3461.0</td>
+<td>NaN</td>
+<td>5118.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780321</th>
+<td>35153500150000</td>
+<td>1996</td>
+<td>2284.0</td>
+<td>NaN</td>
+<td>2556.0</td>
+<td>NaN</td>
+<td>4238.0</td>
+<td>NaN</td>
+<td>4564.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>5473.0</td>
+<td>NaN</td>
+<td>4444.0</td>
+<td>NaN</td>
+<td>5059.0</td>
+<td>NaN</td>
+<td>1091.0</td>
+<td>NaN</td>
+<td>2059.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780322</th>
+<td>35153500150000</td>
+<td>1997</td>
+<td>2433.0</td>
+<td>NaN</td>
+<td>4552.0</td>
+<td>NaN</td>
+<td>3950.0</td>
+<td>NaN</td>
+<td>3095.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>7045.0</td>
+<td>NaN</td>
+<td>8017.0</td>
+<td>NaN</td>
+<td>7692.0</td>
+<td>NaN</td>
+<td>5397.0</td>
+<td>NaN</td>
+<td>5507.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780323</th>
+<td>35153500150000</td>
+<td>1998</td>
+<td>5989.0</td>
+<td>NaN</td>
+<td>3941.0</td>
+<td>NaN</td>
+<td>4342.0</td>
+<td>NaN</td>
+<td>5967.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>6189.0</td>
+<td>NaN</td>
+<td>4908.0</td>
+<td>NaN</td>
+<td>5642.0</td>
+<td>NaN</td>
+<td>3136.0</td>
+<td>NaN</td>
+<td>4873.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780324</th>
+<td>35153500150000</td>
+<td>1999</td>
+<td>5725.0</td>
+<td>NaN</td>
+<td>4127.0</td>
+<td>NaN</td>
+<td>4321.0</td>
+<td>NaN</td>
+<td>4919.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>5196.0</td>
+<td>NaN</td>
+<td>5391.0</td>
+<td>NaN</td>
+<td>5612.0</td>
+<td>NaN</td>
+<td>5478.0</td>
+<td>NaN</td>
+<td>3908.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>780325</th>
+<td>35153500150000</td>
+<td>2000</td>
+<td>4464.0</td>
+<td>NaN</td>
+<td>3908.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+<p>780326 rows × 26 columns</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#now clean the formation string.  These tend to have </span>
+<span class="c1">#extraneous whitespace</span>
+<span class="k">def</span> <span class="nf">clean_text_data</span><span class="p">(</span><span class="n">in_string</span><span class="p">):</span>
+
+    <span class="n">out_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">in_string</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_string</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+<span class="c1">#data["FORMATION"] = data["FORMATION"].astype(str) </span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"FORMATION"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"FORMATION"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_text_data</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"WELL_NAME"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"WELL_NAME"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_text_data</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"OPERATOR"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"OPERATOR"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_text_data</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"PURCHASER"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"PURCHASER"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_text_data</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_text output_error">
+<pre>
+
+<span class="ansi-red-fg">NameError</span>Traceback (most recent call last)
+<span class="ansi-green-fg"><ipython-input-1-7d2ab631a6a4></span> in <span class="ansi-cyan-fg"><module></span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      7</span> 
+<span class="ansi-green-intense-fg ansi-bold">      8</span> <span class="ansi-red-fg">#data["FORMATION"] = data["FORMATION"].astype(str)</span>
+<span class="ansi-green-fg">----> 9</span><span class="ansi-red-fg"> </span>data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">"FORMATION"</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">"FORMATION"</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>apply<span class="ansi-blue-fg">(</span>clean_text_data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">"WELL_NAME"</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">"WELL_NAME"</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>apply<span class="ansi-blue-fg">(</span>clean_text_data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span> data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">"OPERATOR"</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">"OPERATOR"</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>apply<span class="ansi-blue-fg">(</span>clean_text_data<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">NameError</span>: name 'data' is not defined</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [44]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[44]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([u'ALLOWABLE_CLASS', u'ALLOWABLE_TYPE', u'API_COUNTY', u'API_NUMBER',
+       u'APR', u'AUG', u'CODE', u'DEC', u'ENTITY_ID', u'FEB', u'FORMATION',
+       u'GAS', u'GAS.1', u'GAS.10', u'GAS.11', u'GAS.2', u'GAS.3', u'GAS.4',
+       u'GAS.5', u'GAS.6', u'GAS.7', u'GAS.8', u'GAS.9', u'JAN', u'JUL',
+       u'JUN', u'LATITUDE', u'LONGITUDE', u'MAR', u'MAY', u'ME', u'NOV',
+       u'OCT', u'OFB', u'OIL', u'OIL.1', u'OIL.10', u'OIL.11', u'OIL.2',
+       u'OIL.3', u'OIL.4', u'OIL.5', u'OIL.6', u'OIL.7', u'OIL.8', u'OIL.9',
+       u'OPERATOR', u'OPER_NO', u'OTC_COUNTY', u'OTC_LEASE_NO', u'OTC_MERGE',
+       u'OTC_SUB_NO', u'POOL_NO', u'PURCHASER', u'PURCH_NO', u'Q1', u'Q2',
+       u'Q3', u'Q4', u'RAN', u'S', u'SECTION', u'SEP', u'SUFFIX', u'TWP',
+       u'WELL_NAME', u'WELL_NO', u'YEAR'],
+      dtype='object')</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [45]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">columns_to_keep</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ENTITY_ID'</span><span class="p">,</span> <span class="s1">'FORMATION'</span><span class="p">,</span> <span class="s1">'LATITUDE'</span><span class="p">,</span> <span class="s1">'LONGITUDE'</span><span class="p">,</span> <span class="s1">'OPERATOR'</span><span class="p">,</span> <span class="s1">'WELL_NAME'</span><span class="p">,</span> <span class="s1">'PURCHASER'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [30]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">annual_production_data</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">annual_meta_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">annual_data</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Cleaning </span><span class="si">%d</span><span class="s1"> data...'</span><span class="o">%</span><span class="k">year</span>)
+    <span class="n">data</span> <span class="o">=</span> <span class="n">annual_data</span><span class="p">[</span><span class="n">year</span><span class="p">]</span>
+
+    
+    <span class="c1">#Form the full unique API number by concatenating the </span>
+    <span class="c1"># Okalhoma state code '35' with the API_COUNTY and </span>
+    <span class="c1"># API_NUMBER fields</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">'API_NUMBER'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'API_NUMBER'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">raise_on_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">'{0:0>5}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">'API_COUNTY'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'API_COUNTY'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">raise_on_error</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">'{0:0>3}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">'ENTITY_ID'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'35'</span><span class="o">+</span><span class="n">data</span><span class="p">[</span><span class="s1">'API_COUNTY'</span><span class="p">]</span><span class="o">+</span><span class="n">data</span><span class="p">[</span><span class="s1">'API_NUMBER'</span><span class="p">]</span><span class="o">+</span><span class="s1">'0000'</span>
+    
+    <span class="n">prod_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">'GAS'</span><span class="p">,</span> <span class="s1">'OIL'</span><span class="p">,</span> <span class="s1">'GAS.1'</span><span class="p">,</span> <span class="s1">'OIL.1'</span><span class="p">,</span> <span class="s1">'GAS.2'</span><span class="p">,</span> 
+                 <span class="s1">'OIL.2'</span><span class="p">,</span> <span class="s1">'GAS.3'</span><span class="p">,</span> <span class="s1">'OIL.3'</span><span class="p">,</span> <span class="s1">'GAS.4'</span><span class="p">,</span> <span class="s1">'OIL.4'</span><span class="p">,</span>
+                 <span class="s1">'GAS.5'</span><span class="p">,</span> <span class="s1">'OIL.5'</span><span class="p">,</span> <span class="s1">'GAS.6'</span><span class="p">,</span> <span class="s1">'OIL.6'</span><span class="p">,</span> <span class="s1">'GAS.7'</span><span class="p">,</span> 
+                 <span class="s1">'OIL.7'</span><span class="p">,</span> <span class="s1">'GAS.8'</span><span class="p">,</span> <span class="s1">'OIL.8'</span><span class="p">,</span> <span class="s1">'GAS.9'</span><span class="p">,</span> <span class="s1">'OIL.9'</span><span class="p">,</span>
+                 <span class="s1">'GAS.10'</span><span class="p">,</span> <span class="s1">'OIL.10'</span><span class="p">,</span> <span class="s1">'GAS.11'</span><span class="p">,</span> <span class="s1">'OIL.11'</span><span class="p">,</span>
+                 <span class="s1">'ENTITY_ID'</span><span class="p">,</span> <span class="s1">'YEAR'</span><span class="p">]]</span>
+
+    <span class="c1">#data.apply(pd.to_numeric, errors='ignore')</span>
+    <span class="c1">#convert the data type of all OIL and GAS columns to numeric</span>
+    <span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">prod_data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">'GAS'</span> <span class="ow">in</span> <span class="n">col_name</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">'OIL'</span> <span class="ow">in</span> <span class="n">col_name</span><span class="p">):</span>
+            <span class="n">prod_data</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">prod_data</span><span class="p">[</span><span class="n">col_name</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+    
+    <span class="c1">#rename the oil and gas montly totals to something more</span>
+    <span class="c1">#descriptive</span>
+    <span class="n">prod_data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'GAS'</span><span class="p">:</span> <span class="s1">'GAS - January'</span><span class="p">,</span>
+                         <span class="s1">'OIL'</span><span class="p">:</span> <span class="s1">'OIL - January'</span><span class="p">,</span>
+                         <span class="s1">'GAS.1'</span><span class="p">:</span> <span class="s1">'GAS - February'</span><span class="p">,</span>
+                         <span class="s1">'OIL.1'</span><span class="p">:</span> <span class="s1">'OIL - February'</span><span class="p">,</span>
+                         <span class="s1">'GAS.2'</span><span class="p">:</span> <span class="s1">'GAS - March'</span><span class="p">,</span>
+                         <span class="s1">'OIL.2'</span><span class="p">:</span> <span class="s1">'OIL - March'</span><span class="p">,</span>
+                         <span class="s1">'GAS.3'</span><span class="p">:</span> <span class="s1">'GAS - April '</span><span class="p">,</span>
+                         <span class="s1">'OIL.3'</span><span class="p">:</span> <span class="s1">'OIL - April'</span><span class="p">,</span>
+                         <span class="s1">'GAS.4'</span><span class="p">:</span> <span class="s1">'GAS - May'</span><span class="p">,</span>
+                         <span class="s1">'OIL.4'</span><span class="p">:</span> <span class="s1">'OIL - May'</span><span class="p">,</span>
+                         <span class="s1">'GAS.5'</span><span class="p">:</span> <span class="s1">'GAS - June'</span><span class="p">,</span>
+                         <span class="s1">'OIL.5'</span><span class="p">:</span> <span class="s1">'OIL - June'</span><span class="p">,</span>
+                         <span class="s1">'GAS.6'</span><span class="p">:</span> <span class="s1">'GAS - July'</span><span class="p">,</span>
+                         <span class="s1">'OIL.6'</span><span class="p">:</span> <span class="s1">'OIL - July'</span><span class="p">,</span>
+                         <span class="s1">'GAS.7'</span><span class="p">:</span> <span class="s1">'GAS - August'</span><span class="p">,</span>
+                         <span class="s1">'OIL.7'</span><span class="p">:</span> <span class="s1">'OIL - August'</span><span class="p">,</span>
+                         <span class="s1">'GAS.8'</span><span class="p">:</span> <span class="s1">'GAS - September'</span><span class="p">,</span>
+                         <span class="s1">'OIL.8'</span><span class="p">:</span> <span class="s1">'OIL - September'</span><span class="p">,</span>
+                         <span class="s1">'GAS.9'</span><span class="p">:</span> <span class="s1">'GAS - October'</span><span class="p">,</span>
+                         <span class="s1">'OIL.9'</span><span class="p">:</span> <span class="s1">'OIL - October'</span><span class="p">,</span>
+                         <span class="s1">'GAS.10'</span><span class="p">:</span> <span class="s1">'GAS - November'</span><span class="p">,</span>
+                         <span class="s1">'OIL.10'</span><span class="p">:</span> <span class="s1">'OIL - November'</span><span class="p">,</span>
+                         <span class="s1">'GAS.11'</span><span class="p">:</span> <span class="s1">'GAS - December'</span><span class="p">,</span>
+                         <span class="s1">'OIL.11'</span><span class="p">:</span> <span class="s1">'OIL - December'</span><span class="p">,</span>
+                         <span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                         
+    <span class="c1">#some entity id's have multiple entries.  I do not know </span>
+    <span class="c1">#why this is.  it appears like they might be the production</span>
+    <span class="c1">#attributed to different owners. try summing the production</span>
+    <span class="c1">#for now...</span>
+    <span class="n">prod_data</span> <span class="o">=</span> <span class="n">prod_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">'ENTITY_ID'</span><span class="p">,</span><span class="s1">'YEAR'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">prod_data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    
+    <span class="c1">#add a year column (may remove this when we try summing over the entire frame)</span>
+    <span class="c1">#prod_data.loc[:,'Year'] = year</span>
+    <span class="n">annual_production_data</span><span class="p">[</span><span class="n">year</span><span class="p">]</span> <span class="o">=</span> <span class="n">prod_data</span>
+    
+    
+    <span class="c1">#now clean the formation string.  These tend to have </span>
+    <span class="c1">#extraneous whitespace</span>
+    <span class="k">def</span> <span class="nf">clean_formation_string</span><span class="p">(</span><span class="n">in_string</span><span class="p">):</span>
+        
+        <span class="n">out_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">in_string</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_string</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        
+    <span class="c1">#data["FORMATION"] = data["FORMATION"].astype(str) </span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">"FORMATION"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"FORMATION"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_formation_string</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">"WELL_NAME"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"WELL_NAME"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_formation_string</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">"OPERATOR"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"OPERATOR"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_formation_string</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">"PURCHASER"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"PURCHASER"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_formation_string</span><span class="p">)</span>
+    <span class="n">annual_data</span><span class="p">[</span><span class="n">year</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Cleaning 1988 data...
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/bhall/Library/Enthought/Canopy_64bit/User/lib/python2.7/site-packages/ipykernel/__main__.py:27: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Cleaning 1989 data...
+Cleaning 1990 data...
+Cleaning 1991 data...
+Cleaning 1992 data...
+Cleaning 1993 data...
+Cleaning 1995 data...
+Cleaning 1996 data...
+Cleaning 1997 data...
+Cleaning 1998 data...
+Cleaning 1999 data...
+Cleaning 2000 data...
+Cleaning 2001 data...
+Cleaning 2002 data...
+Cleaning 2003 data...
+Cleaning 2004 data...
+Cleaning 2005 data...
+Cleaning 2006 data...
+Cleaning 2007 data...
+Cleaning 2008 data...
+Cleaning 2009 data...
+Cleaning 2010 data...
+Cleaning 2011 data...
+Cleaning 2012 data...
+Cleaning 2013 data...
+Cleaning 2014 data...
+Cleaning 2015 data...
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [31]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">annual_production_data</span><span class="p">[</span><span class="mi">2005</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[31]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>ENTITY_ID</th>
+<th>YEAR</th>
+<th>GAS - January</th>
+<th>OIL - January</th>
+<th>GAS - February</th>
+<th>OIL - February</th>
+<th>GAS - March</th>
+<th>OIL - March</th>
+<th>GAS - April</th>
+<th>OIL - April</th>
+<th>...</th>
+<th>GAS - August</th>
+<th>OIL - August</th>
+<th>GAS - September</th>
+<th>OIL - September</th>
+<th>GAS - October</th>
+<th>OIL - October</th>
+<th>GAS - November</th>
+<th>OIL - November</th>
+<th>GAS - December</th>
+<th>OIL - December</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>35003000010000</td>
+<td>2005</td>
+<td>1950.0</td>
+<td>NaN</td>
+<td>1589.0</td>
+<td>NaN</td>
+<td>1842.0</td>
+<td>NaN</td>
+<td>1724.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1702.0</td>
+<td>NaN</td>
+<td>1484.0</td>
+<td>NaN</td>
+<td>1626.0</td>
+<td>NaN</td>
+<td>1730.0</td>
+<td>NaN</td>
+<td>1342.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>1</th>
+<td>35003000250000</td>
+<td>2005</td>
+<td>85.0</td>
+<td>NaN</td>
+<td>74.0</td>
+<td>NaN</td>
+<td>80.0</td>
+<td>NaN</td>
+<td>69.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>81.0</td>
+<td>NaN</td>
+<td>57.0</td>
+<td>NaN</td>
+<td>113.0</td>
+<td>NaN</td>
+<td>80.0</td>
+<td>NaN</td>
+<td>75.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>2</th>
+<td>35003000680000</td>
+<td>2005</td>
+<td>488.0</td>
+<td>NaN</td>
+<td>408.0</td>
+<td>NaN</td>
+<td>312.0</td>
+<td>NaN</td>
+<td>635.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>933.0</td>
+<td>NaN</td>
+<td>1006.0</td>
+<td>NaN</td>
+<td>1214.0</td>
+<td>NaN</td>
+<td>1136.0</td>
+<td>NaN</td>
+<td>815.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>3</th>
+<td>35003000710000</td>
+<td>2005</td>
+<td>1301.0</td>
+<td>NaN</td>
+<td>1057.0</td>
+<td>NaN</td>
+<td>1874.0</td>
+<td>NaN</td>
+<td>1826.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2089.0</td>
+<td>NaN</td>
+<td>2333.0</td>
+<td>NaN</td>
+<td>2354.0</td>
+<td>NaN</td>
+<td>1885.0</td>
+<td>NaN</td>
+<td>1086.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>4</th>
+<td>35003000730000</td>
+<td>2005</td>
+<td>573.0</td>
+<td>NaN</td>
+<td>440.0</td>
+<td>NaN</td>
+<td>509.0</td>
+<td>NaN</td>
+<td>476.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>4336.0</td>
+<td>NaN</td>
+<td>1859.0</td>
+<td>NaN</td>
+<td>488.0</td>
+<td>NaN</td>
+<td>180.0</td>
+<td>NaN</td>
+<td>260.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>5</th>
+<td>35003000960000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>682.0</td>
+<td>NaN</td>
+<td>823.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>595.0</td>
+<td>NaN</td>
+<td>194.0</td>
+<td>NaN</td>
+<td>86.0</td>
+<td>NaN</td>
+<td>626.0</td>
+<td>NaN</td>
+<td>786.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>6</th>
+<td>35003001020000</td>
+<td>2005</td>
+<td>340.0</td>
+<td>NaN</td>
+<td>806.0</td>
+<td>NaN</td>
+<td>879.0</td>
+<td>NaN</td>
+<td>795.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>986.0</td>
+<td>NaN</td>
+<td>926.0</td>
+<td>NaN</td>
+<td>312.0</td>
+<td>NaN</td>
+<td>1184.0</td>
+<td>NaN</td>
+<td>431.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>7</th>
+<td>35003001430000</td>
+<td>2005</td>
+<td>776.0</td>
+<td>NaN</td>
+<td>701.0</td>
+<td>NaN</td>
+<td>761.0</td>
+<td>NaN</td>
+<td>739.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>760.0</td>
+<td>NaN</td>
+<td>887.0</td>
+<td>NaN</td>
+<td>883.0</td>
+<td>NaN</td>
+<td>713.0</td>
+<td>NaN</td>
+<td>771.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>8</th>
+<td>35003200020000</td>
+<td>2005</td>
+<td>815.0</td>
+<td>NaN</td>
+<td>738.0</td>
+<td>NaN</td>
+<td>840.0</td>
+<td>NaN</td>
+<td>831.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>856.0</td>
+<td>NaN</td>
+<td>720.0</td>
+<td>NaN</td>
+<td>831.0</td>
+<td>NaN</td>
+<td>817.0</td>
+<td>NaN</td>
+<td>826.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>9</th>
+<td>35003200140000</td>
+<td>2005</td>
+<td>2401.0</td>
+<td>NaN</td>
+<td>2043.0</td>
+<td>NaN</td>
+<td>2301.0</td>
+<td>NaN</td>
+<td>2258.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2207.0</td>
+<td>NaN</td>
+<td>2089.0</td>
+<td>NaN</td>
+<td>2185.0</td>
+<td>NaN</td>
+<td>2059.0</td>
+<td>NaN</td>
+<td>2272.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>10</th>
+<td>35003200490000</td>
+<td>2005</td>
+<td>3226.0</td>
+<td>NaN</td>
+<td>1862.0</td>
+<td>NaN</td>
+<td>3445.0</td>
+<td>NaN</td>
+<td>3332.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>447.0</td>
+<td>NaN</td>
+<td>3832.0</td>
+<td>NaN</td>
+<td>3841.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>11</th>
+<td>35003200580000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>470.0</td>
+<td>NaN</td>
+<td>726.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>691.0</td>
+<td>NaN</td>
+<td>737.0</td>
+<td>NaN</td>
+<td>641.0</td>
+<td>NaN</td>
+<td>554.0</td>
+<td>NaN</td>
+<td>557.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>12</th>
+<td>35003200680000</td>
+<td>2005</td>
+<td>212.0</td>
+<td>NaN</td>
+<td>185.0</td>
+<td>NaN</td>
+<td>114.0</td>
+<td>NaN</td>
+<td>165.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>165.0</td>
+<td>NaN</td>
+<td>320.0</td>
+<td>NaN</td>
+<td>299.0</td>
+<td>NaN</td>
+<td>303.0</td>
+<td>NaN</td>
+<td>314.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>13</th>
+<td>35003200830000</td>
+<td>2005</td>
+<td>15052.0</td>
+<td>NaN</td>
+<td>10649.0</td>
+<td>NaN</td>
+<td>8851.0</td>
+<td>NaN</td>
+<td>5307.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>7075.0</td>
+<td>NaN</td>
+<td>5955.0</td>
+<td>NaN</td>
+<td>6162.0</td>
+<td>NaN</td>
+<td>5435.0</td>
+<td>NaN</td>
+<td>4780.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>14</th>
+<td>35003200990000</td>
+<td>2005</td>
+<td>859.0</td>
+<td>NaN</td>
+<td>708.0</td>
+<td>NaN</td>
+<td>452.0</td>
+<td>NaN</td>
+<td>854.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>785.0</td>
+<td>NaN</td>
+<td>853.0</td>
+<td>NaN</td>
+<td>793.0</td>
+<td>NaN</td>
+<td>528.0</td>
+<td>NaN</td>
+<td>779.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>15</th>
+<td>35003201010000</td>
+<td>2005</td>
+<td>528.0</td>
+<td>NaN</td>
+<td>557.0</td>
+<td>NaN</td>
+<td>376.0</td>
+<td>NaN</td>
+<td>23.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>300.0</td>
+<td>NaN</td>
+<td>302.0</td>
+<td>NaN</td>
+<td>339.0</td>
+<td>NaN</td>
+<td>297.0</td>
+<td>NaN</td>
+<td>311.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>16</th>
+<td>35003201040000</td>
+<td>2005</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>17</th>
+<td>35003201240000</td>
+<td>2005</td>
+<td>599.0</td>
+<td>NaN</td>
+<td>495.0</td>
+<td>NaN</td>
+<td>630.0</td>
+<td>NaN</td>
+<td>511.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>560.0</td>
+<td>NaN</td>
+<td>599.0</td>
+<td>NaN</td>
+<td>677.0</td>
+<td>NaN</td>
+<td>609.0</td>
+<td>NaN</td>
+<td>184.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>18</th>
+<td>35003201270000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>325.0</td>
+<td>NaN</td>
+<td>589.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>355.0</td>
+<td>NaN</td>
+<td>72.0</td>
+<td>NaN</td>
+<td>454.0</td>
+<td>NaN</td>
+<td>374.0</td>
+<td>NaN</td>
+<td>195.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>19</th>
+<td>35003201300000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>431.0</td>
+<td>NaN</td>
+<td>540.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>112.0</td>
+<td>NaN</td>
+<td>137.0</td>
+<td>NaN</td>
+<td>317.0</td>
+<td>NaN</td>
+<td>422.0</td>
+<td>NaN</td>
+<td>544.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>20</th>
+<td>35003201340000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>110.0</td>
+<td>NaN</td>
+<td>71.0</td>
+<td>NaN</td>
+<td>90.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>63.0</td>
+<td>NaN</td>
+<td>46.0</td>
+<td>NaN</td>
+<td>54.0</td>
+<td>NaN</td>
+<td>20.0</td>
+<td>NaN</td>
+<td>87.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>21</th>
+<td>35003201370000</td>
+<td>2005</td>
+<td>33.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>11.0</td>
+<td>NaN</td>
+<td>23.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>81.0</td>
+<td>NaN</td>
+<td>65.0</td>
+<td>NaN</td>
+<td>74.0</td>
+<td>NaN</td>
+<td>75.0</td>
+<td>NaN</td>
+<td>75.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>22</th>
+<td>35003201410000</td>
+<td>2005</td>
+<td>1141.0</td>
+<td>NaN</td>
+<td>1045.0</td>
+<td>NaN</td>
+<td>1191.0</td>
+<td>NaN</td>
+<td>1159.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1141.0</td>
+<td>NaN</td>
+<td>1127.0</td>
+<td>NaN</td>
+<td>1148.0</td>
+<td>NaN</td>
+<td>1058.0</td>
+<td>NaN</td>
+<td>997.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>23</th>
+<td>35003201420000</td>
+<td>2005</td>
+<td>1554.0</td>
+<td>NaN</td>
+<td>933.0</td>
+<td>NaN</td>
+<td>849.0</td>
+<td>NaN</td>
+<td>652.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>587.0</td>
+<td>NaN</td>
+<td>563.0</td>
+<td>NaN</td>
+<td>592.0</td>
+<td>NaN</td>
+<td>566.0</td>
+<td>NaN</td>
+<td>594.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>24</th>
+<td>35003201470000</td>
+<td>2005</td>
+<td>1141.0</td>
+<td>NaN</td>
+<td>1137.0</td>
+<td>NaN</td>
+<td>1306.0</td>
+<td>NaN</td>
+<td>1181.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1307.0</td>
+<td>NaN</td>
+<td>1001.0</td>
+<td>NaN</td>
+<td>1199.0</td>
+<td>NaN</td>
+<td>1157.0</td>
+<td>NaN</td>
+<td>1057.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>25</th>
+<td>35003201500000</td>
+<td>2005</td>
+<td>273.0</td>
+<td>NaN</td>
+<td>187.0</td>
+<td>NaN</td>
+<td>458.0</td>
+<td>NaN</td>
+<td>194.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>174.0</td>
+<td>NaN</td>
+<td>190.0</td>
+<td>NaN</td>
+<td>212.0</td>
+<td>NaN</td>
+<td>205.0</td>
+<td>NaN</td>
+<td>197.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>26</th>
+<td>35003201560000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>27</th>
+<td>35003201590000</td>
+<td>2005</td>
+<td>502.0</td>
+<td>NaN</td>
+<td>418.0</td>
+<td>NaN</td>
+<td>416.0</td>
+<td>NaN</td>
+<td>698.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>666.0</td>
+<td>NaN</td>
+<td>620.0</td>
+<td>NaN</td>
+<td>527.0</td>
+<td>NaN</td>
+<td>611.0</td>
+<td>NaN</td>
+<td>645.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>28</th>
+<td>35003201630000</td>
+<td>2005</td>
+<td>812.0</td>
+<td>NaN</td>
+<td>877.0</td>
+<td>NaN</td>
+<td>790.0</td>
+<td>NaN</td>
+<td>717.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>955.0</td>
+<td>NaN</td>
+<td>962.0</td>
+<td>NaN</td>
+<td>1148.0</td>
+<td>NaN</td>
+<td>1019.0</td>
+<td>NaN</td>
+<td>1024.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>29</th>
+<td>35003201640000</td>
+<td>2005</td>
+<td>1065.0</td>
+<td>NaN</td>
+<td>1152.0</td>
+<td>NaN</td>
+<td>1228.0</td>
+<td>NaN</td>
+<td>1055.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1354.0</td>
+<td>NaN</td>
+<td>1378.0</td>
+<td>NaN</td>
+<td>1432.0</td>
+<td>NaN</td>
+<td>1376.0</td>
+<td>NaN</td>
+<td>1411.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>35411</th>
+<td>35153300470000</td>
+<td>2005</td>
+<td>8110.0</td>
+<td>NaN</td>
+<td>8013.0</td>
+<td>NaN</td>
+<td>6765.0</td>
+<td>NaN</td>
+<td>8008.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>8382.0</td>
+<td>NaN</td>
+<td>8037.0</td>
+<td>NaN</td>
+<td>7784.0</td>
+<td>NaN</td>
+<td>7027.0</td>
+<td>NaN</td>
+<td>7708.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35412</th>
+<td>35153300480000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35413</th>
+<td>35153300660000</td>
+<td>2005</td>
+<td>614.0</td>
+<td>NaN</td>
+<td>598.0</td>
+<td>NaN</td>
+<td>645.0</td>
+<td>NaN</td>
+<td>649.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>610.0</td>
+<td>NaN</td>
+<td>631.0</td>
+<td>NaN</td>
+<td>701.0</td>
+<td>NaN</td>
+<td>632.0</td>
+<td>NaN</td>
+<td>660.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35414</th>
+<td>35153300770000</td>
+<td>2005</td>
+<td>2839.0</td>
+<td>NaN</td>
+<td>3258.0</td>
+<td>NaN</td>
+<td>3285.0</td>
+<td>NaN</td>
+<td>3119.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>3024.0</td>
+<td>NaN</td>
+<td>2918.0</td>
+<td>NaN</td>
+<td>2487.0</td>
+<td>NaN</td>
+<td>2651.0</td>
+<td>NaN</td>
+<td>1613.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35415</th>
+<td>35153300840000</td>
+<td>2005</td>
+<td>347.0</td>
+<td>NaN</td>
+<td>338.0</td>
+<td>NaN</td>
+<td>175.0</td>
+<td>NaN</td>
+<td>366.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>357.0</td>
+<td>NaN</td>
+<td>376.0</td>
+<td>NaN</td>
+<td>220.0</td>
+<td>NaN</td>
+<td>214.0</td>
+<td>NaN</td>
+<td>127.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35416</th>
+<td>35153300860000</td>
+<td>2005</td>
+<td>1260.0</td>
+<td>NaN</td>
+<td>987.0</td>
+<td>NaN</td>
+<td>1182.0</td>
+<td>NaN</td>
+<td>882.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1061.0</td>
+<td>NaN</td>
+<td>952.0</td>
+<td>NaN</td>
+<td>1234.0</td>
+<td>NaN</td>
+<td>982.0</td>
+<td>NaN</td>
+<td>666.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35417</th>
+<td>35153351590000</td>
+<td>2005</td>
+<td>2015.0</td>
+<td>NaN</td>
+<td>3050.0</td>
+<td>NaN</td>
+<td>3506.0</td>
+<td>NaN</td>
+<td>3384.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2494.0</td>
+<td>NaN</td>
+<td>2220.0</td>
+<td>NaN</td>
+<td>3183.0</td>
+<td>NaN</td>
+<td>2745.0</td>
+<td>NaN</td>
+<td>3217.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35418</th>
+<td>35153351690000</td>
+<td>2005</td>
+<td>370.0</td>
+<td>NaN</td>
+<td>103.0</td>
+<td>NaN</td>
+<td>168.0</td>
+<td>NaN</td>
+<td>334.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>942.0</td>
+<td>NaN</td>
+<td>639.0</td>
+<td>NaN</td>
+<td>750.0</td>
+<td>NaN</td>
+<td>184.0</td>
+<td>NaN</td>
+<td>1134.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35419</th>
+<td>35153351740000</td>
+<td>2005</td>
+<td>630.0</td>
+<td>NaN</td>
+<td>1634.0</td>
+<td>NaN</td>
+<td>1984.0</td>
+<td>NaN</td>
+<td>1995.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2244.0</td>
+<td>NaN</td>
+<td>2005.0</td>
+<td>NaN</td>
+<td>2079.0</td>
+<td>NaN</td>
+<td>2136.0</td>
+<td>NaN</td>
+<td>1867.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35420</th>
+<td>35153351820000</td>
+<td>2005</td>
+<td>140.0</td>
+<td>NaN</td>
+<td>140.0</td>
+<td>NaN</td>
+<td>154.0</td>
+<td>NaN</td>
+<td>149.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>149.0</td>
+<td>NaN</td>
+<td>149.0</td>
+<td>NaN</td>
+<td>150.0</td>
+<td>NaN</td>
+<td>149.0</td>
+<td>NaN</td>
+<td>154.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35421</th>
+<td>35153351990000</td>
+<td>2005</td>
+<td>867.0</td>
+<td>NaN</td>
+<td>720.0</td>
+<td>NaN</td>
+<td>733.0</td>
+<td>NaN</td>
+<td>788.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>710.0</td>
+<td>NaN</td>
+<td>731.0</td>
+<td>NaN</td>
+<td>750.0</td>
+<td>NaN</td>
+<td>761.0</td>
+<td>NaN</td>
+<td>742.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35422</th>
+<td>35153352010000</td>
+<td>2005</td>
+<td>2281.0</td>
+<td>NaN</td>
+<td>1470.0</td>
+<td>NaN</td>
+<td>1497.0</td>
+<td>NaN</td>
+<td>1423.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1310.0</td>
+<td>NaN</td>
+<td>946.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>742.0</td>
+<td>NaN</td>
+<td>1284.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35423</th>
+<td>35153352050000</td>
+<td>2005</td>
+<td>1271.0</td>
+<td>NaN</td>
+<td>1851.0</td>
+<td>NaN</td>
+<td>2492.0</td>
+<td>NaN</td>
+<td>2791.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1011.0</td>
+<td>NaN</td>
+<td>781.0</td>
+<td>NaN</td>
+<td>1040.0</td>
+<td>NaN</td>
+<td>1029.0</td>
+<td>NaN</td>
+<td>1020.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35424</th>
+<td>35153352060000</td>
+<td>2005</td>
+<td>1491.0</td>
+<td>NaN</td>
+<td>1610.0</td>
+<td>NaN</td>
+<td>1679.0</td>
+<td>NaN</td>
+<td>1621.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1685.0</td>
+<td>NaN</td>
+<td>1579.0</td>
+<td>NaN</td>
+<td>1602.0</td>
+<td>NaN</td>
+<td>1570.0</td>
+<td>NaN</td>
+<td>1518.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35425</th>
+<td>35153352070000</td>
+<td>2005</td>
+<td>1282.0</td>
+<td>NaN</td>
+<td>1135.0</td>
+<td>NaN</td>
+<td>1398.0</td>
+<td>NaN</td>
+<td>1331.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1287.0</td>
+<td>NaN</td>
+<td>1218.0</td>
+<td>NaN</td>
+<td>1242.0</td>
+<td>NaN</td>
+<td>1185.0</td>
+<td>NaN</td>
+<td>971.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35426</th>
+<td>35153352080000</td>
+<td>2005</td>
+<td>1553.0</td>
+<td>NaN</td>
+<td>1377.0</td>
+<td>NaN</td>
+<td>1623.0</td>
+<td>NaN</td>
+<td>1539.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1529.0</td>
+<td>NaN</td>
+<td>1425.0</td>
+<td>NaN</td>
+<td>1339.0</td>
+<td>NaN</td>
+<td>1359.0</td>
+<td>NaN</td>
+<td>1451.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35427</th>
+<td>35153352150000</td>
+<td>2005</td>
+<td>1548.0</td>
+<td>NaN</td>
+<td>1640.0</td>
+<td>NaN</td>
+<td>1690.0</td>
+<td>NaN</td>
+<td>2127.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>542.0</td>
+<td>NaN</td>
+<td>830.0</td>
+<td>NaN</td>
+<td>1998.0</td>
+<td>NaN</td>
+<td>1139.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35428</th>
+<td>35153352180000</td>
+<td>2005</td>
+<td>3145.0</td>
+<td>NaN</td>
+<td>3305.0</td>
+<td>NaN</td>
+<td>3811.0</td>
+<td>NaN</td>
+<td>3836.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>3725.0</td>
+<td>NaN</td>
+<td>3956.0</td>
+<td>NaN</td>
+<td>3759.0</td>
+<td>NaN</td>
+<td>3601.0</td>
+<td>NaN</td>
+<td>2934.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35429</th>
+<td>35153352210000</td>
+<td>2005</td>
+<td>2323.0</td>
+<td>NaN</td>
+<td>2253.0</td>
+<td>NaN</td>
+<td>2933.0</td>
+<td>NaN</td>
+<td>2632.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2300.0</td>
+<td>NaN</td>
+<td>2323.0</td>
+<td>NaN</td>
+<td>2607.0</td>
+<td>NaN</td>
+<td>2536.0</td>
+<td>NaN</td>
+<td>2415.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35430</th>
+<td>35153352790000</td>
+<td>2005</td>
+<td>340.0</td>
+<td>NaN</td>
+<td>347.0</td>
+<td>NaN</td>
+<td>362.0</td>
+<td>NaN</td>
+<td>310.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>321.0</td>
+<td>NaN</td>
+<td>264.0</td>
+<td>NaN</td>
+<td>233.0</td>
+<td>NaN</td>
+<td>209.0</td>
+<td>NaN</td>
+<td>224.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35431</th>
+<td>35153352800000</td>
+<td>2005</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>5932.0</td>
+<td>NaN</td>
+<td>7094.0</td>
+<td>NaN</td>
+<td>6871.0</td>
+<td>NaN</td>
+<td>6646.0</td>
+<td>NaN</td>
+<td>6473.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35432</th>
+<td>35153352870000</td>
+<td>2005</td>
+<td>989.0</td>
+<td>NaN</td>
+<td>821.0</td>
+<td>NaN</td>
+<td>1312.0</td>
+<td>NaN</td>
+<td>1791.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1345.0</td>
+<td>NaN</td>
+<td>1156.0</td>
+<td>NaN</td>
+<td>1309.0</td>
+<td>NaN</td>
+<td>1111.0</td>
+<td>NaN</td>
+<td>1065.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35433</th>
+<td>35153352880000</td>
+<td>2005</td>
+<td>1320.0</td>
+<td>NaN</td>
+<td>1079.0</td>
+<td>NaN</td>
+<td>1170.0</td>
+<td>NaN</td>
+<td>1085.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1006.0</td>
+<td>NaN</td>
+<td>937.0</td>
+<td>NaN</td>
+<td>936.0</td>
+<td>NaN</td>
+<td>762.0</td>
+<td>NaN</td>
+<td>859.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35434</th>
+<td>35153352970000</td>
+<td>2005</td>
+<td>1202.0</td>
+<td>NaN</td>
+<td>1617.0</td>
+<td>NaN</td>
+<td>1437.0</td>
+<td>NaN</td>
+<td>1597.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>976.0</td>
+<td>NaN</td>
+<td>1631.0</td>
+<td>NaN</td>
+<td>1194.0</td>
+<td>NaN</td>
+<td>1300.0</td>
+<td>NaN</td>
+<td>1061.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35435</th>
+<td>35153353000000</td>
+<td>2005</td>
+<td>1634.0</td>
+<td>NaN</td>
+<td>1527.0</td>
+<td>NaN</td>
+<td>1695.0</td>
+<td>NaN</td>
+<td>1618.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1709.0</td>
+<td>NaN</td>
+<td>1716.0</td>
+<td>NaN</td>
+<td>1771.0</td>
+<td>NaN</td>
+<td>1659.0</td>
+<td>NaN</td>
+<td>1666.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35436</th>
+<td>35153353080000</td>
+<td>2005</td>
+<td>81.0</td>
+<td>NaN</td>
+<td>145.0</td>
+<td>NaN</td>
+<td>1036.0</td>
+<td>NaN</td>
+<td>1311.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>2247.0</td>
+<td>NaN</td>
+<td>2424.0</td>
+<td>NaN</td>
+<td>2494.0</td>
+<td>NaN</td>
+<td>2309.0</td>
+<td>NaN</td>
+<td>2057.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35437</th>
+<td>35153353110000</td>
+<td>2005</td>
+<td>1067.0</td>
+<td>NaN</td>
+<td>903.0</td>
+<td>NaN</td>
+<td>883.0</td>
+<td>NaN</td>
+<td>928.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>838.0</td>
+<td>NaN</td>
+<td>793.0</td>
+<td>NaN</td>
+<td>859.0</td>
+<td>NaN</td>
+<td>774.0</td>
+<td>NaN</td>
+<td>832.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35438</th>
+<td>35153353120000</td>
+<td>2005</td>
+<td>13841.0</td>
+<td>NaN</td>
+<td>16551.0</td>
+<td>NaN</td>
+<td>17957.0</td>
+<td>NaN</td>
+<td>17157.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>16496.0</td>
+<td>NaN</td>
+<td>15632.0</td>
+<td>NaN</td>
+<td>16275.0</td>
+<td>NaN</td>
+<td>15225.0</td>
+<td>NaN</td>
+<td>13612.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35439</th>
+<td>35153353250000</td>
+<td>2005</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>NaN</td>
+</tr>
+<tr>
+<th>35440</th>
+<td>35153500090000</td>
+<td>2005</td>
+<td>1103.0</td>
+<td>NaN</td>
+<td>1510.0</td>
+<td>NaN</td>
+<td>1333.0</td>
+<td>NaN</td>
+<td>1390.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>1466.0</td>
+<td>NaN</td>
+<td>880.0</td>
+<td>NaN</td>
+<td>967.0</td>
+<td>NaN</td>
+<td>858.0</td>
+<td>NaN</td>
+<td>1168.0</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+<p>35441 rows × 26 columns</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [57]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">all_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">annual_data</span><span class="p">)</span>
+<span class="n">all_data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[57]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th></th>
+<th>ALLOWABLE_CLASS</th>
+<th>ALLOWABLE_TYPE</th>
+<th>API_COUNTY</th>
+<th>API_NUMBER</th>
+<th>APR</th>
+<th>AUG</th>
+<th>CODE</th>
+<th>DEC</th>
+<th>ENTITY_ID</th>
+<th>FEB</th>
+<th>...</th>
+<th>Q4</th>
+<th>RAN</th>
+<th>S</th>
+<th>SECTION</th>
+<th>SEP</th>
+<th>SUFFIX</th>
+<th>TWP</th>
+<th>WELL_NAME</th>
+<th>WELL_NO</th>
+<th>YEAR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th rowspan="30" valign="top">1988</th>
+<th>1</th>
+<td>UO</td>
+<td>I</td>
+<td>003</td>
+<td>20183</td>
+<td>4</td>
+<td>8</td>
+<td>404OSWG</td>
+<td>12</td>
+<td>35003201830000</td>
+<td>2</td>
+<td>...</td>
+<td>NE</td>
+<td>12W</td>
+<td>NaN</td>
+<td>10</td>
+<td>9</td>
+<td></td>
+<td>23N</td>
+<td>DAVIDSON</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>2</th>
+<td></td>
+<td></td>
+<td>003</td>
+<td>20331</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35003203310000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>11W</td>
+<td>NaN</td>
+<td>18</td>
+<td>9</td>
+<td></td>
+<td>25N</td>
+<td>MCCRADY</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>3</th>
+<td></td>
+<td></td>
+<td>003</td>
+<td>20404</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35003204040000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>12W</td>
+<td>NaN</td>
+<td>19</td>
+<td>9</td>
+<td></td>
+<td>24N</td>
+<td>SMITH</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>4</th>
+<td></td>
+<td></td>
+<td>003</td>
+<td>20404</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35003204040000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>12W</td>
+<td>NaN</td>
+<td>19</td>
+<td>9</td>
+<td></td>
+<td>24N</td>
+<td>SMITH</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>5</th>
+<td>UG</td>
+<td>I</td>
+<td>003</td>
+<td>20607</td>
+<td>4</td>
+<td>8</td>
+<td>401MSSCT</td>
+<td>12</td>
+<td>35003206070000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>12W</td>
+<td>NaN</td>
+<td>5</td>
+<td>9</td>
+<td></td>
+<td>25N</td>
+<td>LEAMON</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>6</th>
+<td></td>
+<td></td>
+<td>003</td>
+<td>21201</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35003212010000</td>
+<td>2</td>
+<td>...</td>
+<td>W2</td>
+<td>11W</td>
+<td>NaN</td>
+<td>35</td>
+<td>9</td>
+<td></td>
+<td>28N</td>
+<td>MEYERS</td>
+<td>1-35</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>7</th>
+<td>UO</td>
+<td>I</td>
+<td>003</td>
+<td>21256</td>
+<td>4</td>
+<td>8</td>
+<td>404RDFKC</td>
+<td>12</td>
+<td>35003212560000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>11W</td>
+<td>NaN</td>
+<td>2</td>
+<td>9</td>
+<td></td>
+<td>27N</td>
+<td>WILSON FARMS</td>
+<td>2-1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>8</th>
+<td>AO</td>
+<td>I</td>
+<td>003</td>
+<td>21267</td>
+<td>4</td>
+<td>8</td>
+<td>354MNNG</td>
+<td>12</td>
+<td>35003212670000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>09W</td>
+<td>NaN</td>
+<td>32</td>
+<td>9</td>
+<td></td>
+<td>24N</td>
+<td>DOWERS</td>
+<td>2A</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>9</th>
+<td>AO</td>
+<td>I</td>
+<td>003</td>
+<td>21273</td>
+<td>4</td>
+<td>8</td>
+<td>319MSNR</td>
+<td>12</td>
+<td>35003212730000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>09W</td>
+<td>NaN</td>
+<td>14</td>
+<td>9</td>
+<td></td>
+<td>27N</td>
+<td>CHEROKITA MISENE(J.A.BURCHFIEL</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>10</th>
+<td>AO</td>
+<td>I</td>
+<td>003</td>
+<td>21286</td>
+<td>4</td>
+<td>8</td>
+<td>319MSNR</td>
+<td>12</td>
+<td>35003212860000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>09W</td>
+<td>NaN</td>
+<td>14</td>
+<td>9</td>
+<td>A</td>
+<td>27N</td>
+<td>C.M.U. (J.A.BURCHFIEL 14-4)</td>
+<td>3</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>11</th>
+<td>UO</td>
+<td>I</td>
+<td>003</td>
+<td>21401</td>
+<td>4</td>
+<td>8</td>
+<td>404RDFK</td>
+<td>12</td>
+<td>35003214010000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>10W</td>
+<td>NaN</td>
+<td>21</td>
+<td>9</td>
+<td></td>
+<td>28N</td>
+<td>HOLDERBY</td>
+<td>1-21</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>12</th>
+<td></td>
+<td></td>
+<td>003</td>
+<td>21466</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35003214660000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>11W</td>
+<td>NaN</td>
+<td>10</td>
+<td>9</td>
+<td></td>
+<td>25N</td>
+<td>WEIGAND</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>13</th>
+<td></td>
+<td></td>
+<td>003</td>
+<td>30122</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35003301220000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>09W</td>
+<td>NaN</td>
+<td>8</td>
+<td>9</td>
+<td></td>
+<td>23N</td>
+<td>GOODWIN UNIT</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>14</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00004</td>
+<td>4</td>
+<td>8</td>
+<td>402MWSD</td>
+<td>12</td>
+<td>35007000040000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>20E</td>
+<td>NaN</td>
+<td>16</td>
+<td>9</td>
+<td></td>
+<td>06N</td>
+<td>COBB</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>15</th>
+<td>UG</td>
+<td>S</td>
+<td>007</td>
+<td>00025</td>
+<td>4</td>
+<td>8</td>
+<td>402MWCR</td>
+<td>12</td>
+<td>35007000250000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>25E</td>
+<td>NaN</td>
+<td>8</td>
+<td>9</td>
+<td></td>
+<td>05N</td>
+<td>E E EVANS</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>16</th>
+<td>UG</td>
+<td>S</td>
+<td>007</td>
+<td>00060</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35007000600000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>26E</td>
+<td>NaN</td>
+<td>29</td>
+<td>9</td>
+<td></td>
+<td>05N</td>
+<td>MAY DIXON</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>17</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00062</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35007000620000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>26E</td>
+<td>NaN</td>
+<td>31</td>
+<td>9</td>
+<td></td>
+<td>05N</td>
+<td>F BARBY</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>18</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00104</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35007001040000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>24E</td>
+<td>NaN</td>
+<td>23</td>
+<td>9</td>
+<td></td>
+<td>06N</td>
+<td>R E ADAMS</td>
+<td>8</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>19</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00106</td>
+<td>4</td>
+<td>8</td>
+<td>406TNKW</td>
+<td>12</td>
+<td>35007001060000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>25E</td>
+<td>NaN</td>
+<td>14</td>
+<td>9</td>
+<td></td>
+<td>03N</td>
+<td>BARBY RANCH</td>
+<td>1-4</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>20</th>
+<td>UG</td>
+<td>S</td>
+<td>007</td>
+<td>00111</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35007001110000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>24E</td>
+<td>NaN</td>
+<td>8</td>
+<td>9</td>
+<td></td>
+<td>02N</td>
+<td>LONGCOR GAS UNIT</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>21</th>
+<td></td>
+<td></td>
+<td>007</td>
+<td>00114</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35007001140000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>25E</td>
+<td>NaN</td>
+<td>17</td>
+<td>9</td>
+<td></td>
+<td>03N</td>
+<td>FICKEL B</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>22</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00114</td>
+<td>4</td>
+<td>8</td>
+<td>999TWCR</td>
+<td>12</td>
+<td>35007001140000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>25E</td>
+<td>NaN</td>
+<td>17</td>
+<td>9</td>
+<td></td>
+<td>03N</td>
+<td>FICKEL B</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>23</th>
+<td>UG</td>
+<td>R</td>
+<td>007</td>
+<td>00167</td>
+<td>4</td>
+<td>8</td>
+<td>402MWCR</td>
+<td>12</td>
+<td>35007001670000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>25E</td>
+<td>NaN</td>
+<td>11</td>
+<td>9</td>
+<td></td>
+<td>04N</td>
+<td>LLOYD BARBY</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>24</th>
+<td>UG</td>
+<td>R</td>
+<td>007</td>
+<td>00167</td>
+<td>4</td>
+<td>8</td>
+<td>402MWCR</td>
+<td>12</td>
+<td>35007001670000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>25E</td>
+<td>NaN</td>
+<td>11</td>
+<td>9</td>
+<td></td>
+<td>04N</td>
+<td>LLOYD BARBY</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>25</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00173</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35007001730000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>21E</td>
+<td>NaN</td>
+<td>12</td>
+<td>9</td>
+<td></td>
+<td>01N</td>
+<td>BECHTOLD</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>26</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00177</td>
+<td>4</td>
+<td>8</td>
+<td>406TNKW</td>
+<td>12</td>
+<td>35007001770000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>27E</td>
+<td>NaN</td>
+<td>18</td>
+<td>9</td>
+<td></td>
+<td>02N</td>
+<td>J R WOODSON</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>27</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00179</td>
+<td>4</td>
+<td>8</td>
+<td>406HOVR</td>
+<td>12</td>
+<td>35007001790000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>27E</td>
+<td>NaN</td>
+<td>34</td>
+<td>9</td>
+<td></td>
+<td>04N</td>
+<td>SIZELOVE</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>28</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00179</td>
+<td>4</td>
+<td>8</td>
+<td>406HOVR</td>
+<td>12</td>
+<td>35007001790000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>27E</td>
+<td>NaN</td>
+<td>34</td>
+<td>9</td>
+<td></td>
+<td>04N</td>
+<td>SIZELOVE</td>
+<td>2</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>29</th>
+<td>UG</td>
+<td>I</td>
+<td>007</td>
+<td>00186</td>
+<td>4</td>
+<td>8</td>
+<td>406HOVR</td>
+<td>12</td>
+<td>35007001860000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>28E</td>
+<td>NaN</td>
+<td>6</td>
+<td>9</td>
+<td></td>
+<td>03N</td>
+<td>BARBY (BARBY UNIT#1)</td>
+<td>1-6</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>30</th>
+<td></td>
+<td></td>
+<td>007</td>
+<td>00187</td>
+<td>4</td>
+<td>8</td>
+<td>000UNKN</td>
+<td>12</td>
+<td>35007001870000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>26E</td>
+<td>NaN</td>
+<td>6</td>
+<td>9</td>
+<td></td>
+<td>03N</td>
+<td>OVERTON, WJ</td>
+<td>1</td>
+<td>1988</td>
+</tr>
+<tr>
+<th>...</th>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th rowspan="30" valign="top">2015</th>
+<th>41162</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>23527</td>
+<td>4</td>
+<td>8</td>
+<td>000VARS</td>
+<td>12</td>
+<td>35153235270000</td>
+<td>2</td>
+<td>...</td>
+<td>SW</td>
+<td>18W</td>
+<td>NaN</td>
+<td>21</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>CORINNE</td>
+<td>1-21</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41163</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>23528</td>
+<td>4</td>
+<td>8</td>
+<td>999CRMCH</td>
+<td>12</td>
+<td>35153235280000</td>
+<td>2</td>
+<td>...</td>
+<td>SW</td>
+<td>17W</td>
+<td>NaN</td>
+<td>24</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>KUERSTEINER TRUST</td>
+<td>1-24</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41164</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>23532</td>
+<td>4</td>
+<td>8</td>
+<td>405CLVD</td>
+<td>12</td>
+<td>35153235320000</td>
+<td>2</td>
+<td>...</td>
+<td>SW</td>
+<td>17W</td>
+<td>NaN</td>
+<td>24</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>JUDY</td>
+<td>31-2H</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41165</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>23544</td>
+<td>4</td>
+<td>8</td>
+<td>402MWSD</td>
+<td>12</td>
+<td>35153235440000</td>
+<td>2</td>
+<td>...</td>
+<td>C</td>
+<td>19W</td>
+<td>NaN</td>
+<td>29</td>
+<td>9</td>
+<td>NaN</td>
+<td>26N</td>
+<td>SISTERS</td>
+<td>29-2</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41166</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>23547</td>
+<td>4</td>
+<td>8</td>
+<td>402MWSD</td>
+<td>12</td>
+<td>35153235470000</td>
+<td>2</td>
+<td>...</td>
+<td>NE</td>
+<td>20W</td>
+<td>NaN</td>
+<td>3</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>WITHGOTT</td>
+<td>3-2</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41167</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>23552</td>
+<td>4</td>
+<td>8</td>
+<td>353MRMC</td>
+<td>12</td>
+<td>35153235520000</td>
+<td>2</td>
+<td>...</td>
+<td>S2</td>
+<td>21W</td>
+<td>NaN</td>
+<td>20</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>COOPER</td>
+<td>1-20H</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41168</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>23567</td>
+<td>4</td>
+<td>8</td>
+<td>404CHRKS</td>
+<td>12</td>
+<td>35153235670000</td>
+<td>2</td>
+<td>...</td>
+<td>NaN</td>
+<td>17W</td>
+<td>NaN</td>
+<td>23</td>
+<td>9</td>
+<td>NaN</td>
+<td>21N</td>
+<td>SOUTHERN JAZZ</td>
+<td>1-23</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41169</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>30010</td>
+<td>4</td>
+<td>8</td>
+<td>999OGCR</td>
+<td>12</td>
+<td>35153300100000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>20</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>SWAIN(FORMERLY SWAIN UNIT 1)</td>
+<td>20-1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41170</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>30013</td>
+<td>4</td>
+<td>8</td>
+<td>999OGCRM</td>
+<td>12</td>
+<td>35153300130000</td>
+<td>2</td>
+<td>...</td>
+<td>NaN</td>
+<td>17W</td>
+<td>NaN</td>
+<td>13</td>
+<td>9</td>
+<td>NaN</td>
+<td>22N</td>
+<td>HOLLOWAY (GARVIE 1)</td>
+<td>13-4</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41171</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>30019</td>
+<td>4</td>
+<td>8</td>
+<td>405CGGV</td>
+<td>12</td>
+<td>35153300190000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>35</td>
+<td>9</td>
+<td>NaN</td>
+<td>25N</td>
+<td>CURTIS UNIT</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41172</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>30020</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153300200000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>19W</td>
+<td>NaN</td>
+<td>1</td>
+<td>9</td>
+<td>NaN</td>
+<td>24N</td>
+<td>BARANSY UNIT</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41173</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>30039</td>
+<td>4</td>
+<td>8</td>
+<td>405LYTN</td>
+<td>12</td>
+<td>35153300390000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>36</td>
+<td>9</td>
+<td>NaN</td>
+<td>20N</td>
+<td>FARWELL ETHEL UNIT</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41174</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>30066</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153300660000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>11</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>MORGAN-HORN UNIT</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41175</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>30086</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35153300860000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>22W</td>
+<td>NaN</td>
+<td>7</td>
+<td>9</td>
+<td>NaN</td>
+<td>22N</td>
+<td>BEISEL</td>
+<td>1-7</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41176</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35159</td>
+<td>4</td>
+<td>8</td>
+<td>405CGGV</td>
+<td>12</td>
+<td>35153351590000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>13</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>KATHRYN KEE</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41177</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35174</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153351740000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>35</td>
+<td>9</td>
+<td>NaN</td>
+<td>21N</td>
+<td>EZELL UNIT</td>
+<td>1-35</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41178</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35182</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153351820000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>24</td>
+<td>9</td>
+<td>NaN</td>
+<td>22N</td>
+<td>STATE OF OKLAHOMA</td>
+<td>1-24</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41179</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35199</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153351990000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>32</td>
+<td>9</td>
+<td>NaN</td>
+<td>24N</td>
+<td>CARL E LINTNER</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41180</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35207</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153352070000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>21</td>
+<td>9</td>
+<td>NaN</td>
+<td>24N</td>
+<td>FEDERAL A</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41181</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35208</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153352080000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>28</td>
+<td>9</td>
+<td>NaN</td>
+<td>24N</td>
+<td>STATE K</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41182</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35215</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153352150000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>1</td>
+<td>9</td>
+<td>NaN</td>
+<td>20N</td>
+<td>ARLENE SHUCK</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41183</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35218</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153352180000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>4</td>
+<td>9</td>
+<td>NaN</td>
+<td>20N</td>
+<td>FOX UNIT</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41184</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35221</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153352210000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>19W</td>
+<td>NaN</td>
+<td>3</td>
+<td>9</td>
+<td>NaN</td>
+<td>26N</td>
+<td>B A BROWN</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41185</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35280</td>
+<td>4</td>
+<td>8</td>
+<td>999MMCR</td>
+<td>12</td>
+<td>35153352800000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>17W</td>
+<td>NaN</td>
+<td>31</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>ROBERTS UNIT-B</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41186</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35287</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153352870000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>14</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>MAY MORGAN</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41187</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35288</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153352880000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>24</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>KEE HEIRS</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41188</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35297</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35153352970000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>22W</td>
+<td>NaN</td>
+<td>30</td>
+<td>9</td>
+<td>NaN</td>
+<td>23N</td>
+<td>D.W.THOMAS</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41189</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35300</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153353000000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>18W</td>
+<td>NaN</td>
+<td>5</td>
+<td>9</td>
+<td>NaN</td>
+<td>24N</td>
+<td>HAZEL ROBINSON UNIT</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41190</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>35312</td>
+<td>4</td>
+<td>8</td>
+<td>354CSTR</td>
+<td>12</td>
+<td>35153353120000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>19W</td>
+<td>NaN</td>
+<td>25</td>
+<td>9</td>
+<td>NaN</td>
+<td>24N</td>
+<td>LUDDEN</td>
+<td>1</td>
+<td>2015</td>
+</tr>
+<tr>
+<th>41191</th>
+<td>NaN</td>
+<td>NaN</td>
+<td>153</td>
+<td>50009</td>
+<td>4</td>
+<td>8</td>
+<td>402MRRW</td>
+<td>12</td>
+<td>35153500090000</td>
+<td>2</td>
+<td>...</td>
+<td></td>
+<td>22W</td>
+<td>NaN</td>
+<td>6</td>
+<td>9</td>
+<td>NaN</td>
+<td>22N</td>
+<td>MOREHART</td>
+<td>1-6</td>
+<td>2015</td>
+</tr>
+</tbody>
+</table>
+<p>910220 rows × 68 columns</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-Tidy-Data">The Tidy Data<a class="anchor-link" href="#The-Tidy-Data">¶</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>63884 wells in total.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [58]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">temp</span> <span class="o">=</span> <span class="n">annual_data</span><span class="p">[</span><span class="mi">1996</span><span class="p">]</span>
+<span class="n">temp</span><span class="p">[</span><span class="n">temp</span><span class="p">[</span><span class="s1">'ENTITY_ID'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'35149201050000'</span><span class="p">]</span>
+                                            
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[58]:</div>
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>API_COUNTY</th>
+<th>API_NUMBER</th>
+<th>SUFFIX</th>
+<th>WELL_NAME</th>
+<th>WELL_NO</th>
+<th>OPER_NO</th>
+<th>OPERATOR</th>
+<th>ME</th>
+<th>SECTION</th>
+<th>TWP</th>
+<th>...</th>
+<th>OCT</th>
+<th>OIL - October</th>
+<th>GAS - October</th>
+<th>NOV</th>
+<th>OIL - November</th>
+<th>GAS - November</th>
+<th>DEC</th>
+<th>OIL - December</th>
+<th>GAS - December</th>
+<th>ENTITY_ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>23974</th>
+<td>149</td>
+<td>20105</td>
+<td></td>
+<td>HAGGARD</td>
+<td>3-20</td>
+<td>11187</td>
+<td>BURLINGTON RES OIL & GAS LP</td>
+<td>IM</td>
+<td>20</td>
+<td>10N</td>
+<td>...</td>
+<td>10</td>
+<td>NaN</td>
+<td>587.0</td>
+<td>11</td>
+<td>NaN</td>
+<td>491.0</td>
+<td>12</td>
+<td>NaN</td>
+<td>581.0</td>
+<td>35149201050000</td>
+</tr>
+<tr>
+<th>23975</th>
+<td>149</td>
+<td>20105</td>
+<td></td>
+<td>HAGGARD</td>
+<td>3-20</td>
+<td>11187</td>
+<td>BURLINGTON RES OIL & GAS LP</td>
+<td>IM</td>
+<td>20</td>
+<td>10N</td>
+<td>...</td>
+<td>10</td>
+<td>NaN</td>
+<td>153475.0</td>
+<td>11</td>
+<td>NaN</td>
+<td>141244.0</td>
+<td>12</td>
+<td>NaN</td>
+<td>141627.0</td>
+<td>35149201050000</td>
+</tr>
+<tr>
+<th>23976</th>
+<td>149</td>
+<td>20105</td>
+<td></td>
+<td>HAGGARD</td>
+<td>3-20</td>
+<td>11187</td>
+<td>BURLINGTON RES OIL & GAS LP</td>
+<td>IM</td>
+<td>20</td>
+<td>10N</td>
+<td>...</td>
+<td>10</td>
+<td>NaN</td>
+<td>1901.0</td>
+<td>11</td>
+<td>NaN</td>
+<td>1987.0</td>
+<td>12</td>
+<td>NaN</td>
+<td>1786.0</td>
+<td>35149201050000</td>
+</tr>
+<tr>
+<th>23977</th>
+<td>149</td>
+<td>20105</td>
+<td></td>
+<td>HAGGARD</td>
+<td>3-20</td>
+<td>11187</td>
+<td>BURLINGTON RES OIL & GAS LP</td>
+<td>IM</td>
+<td>20</td>
+<td>10N</td>
+<td>...</td>
+<td>10</td>
+<td>182.0</td>
+<td>NaN</td>
+<td>11</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>12</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>35149201050000</td>
+</tr>
+</tbody>
+</table>
+<p>4 rows × 67 columns</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [64]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">temp</span><span class="p">[</span><span class="n">temp</span><span class="p">[</span><span class="s1">'ENTITY_ID'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'35149201050000'</span><span class="p">][</span><span class="s1">'PURCHASER'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt output_prompt">Out[64]:</div>
+<div class="output_text output_subarea output_execute_result">
+<pre>23974      EL PASO NATURAL GAS CO
+23975        ANR PIPELINE COMPANY
+23976                 TRANSOK LLC
+23977    MERIDIAN OIL TRADING INC
+Name: PURCHASER, dtype: object</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The are repeated entries for the same well that have different Purchasers.  What does this mean?</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: 'center'," +
+        "    displayIndent: '0em'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['$','$'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        " linebreaks: { automatic: true, width: '95% container' }, " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+        "    } " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+        </div>
+
+        <div class="meta">
+            <div>
+                    <a href="https://brendonhall.github.io/tag/notebook.html" class="tag">notebook</a>
+                    <a href="https://brendonhall.github.io/tag/article.html" class="tag">article</a>
+            </div>
+        </div>
+    </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div>
+    <script type="text/javascript">
+      var disqus_shortname = 'brendonhall';
+      var disqus_identifier = '/blog/2017/article-post.html';
+      var disqus_url = 'https://brendonhall.github.io/blog/2017/article-post.html';
+      var disqus_title = 'Tidying the OK Historical Production Dataset';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = "//" + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  </section>
+
+</div>
+
+<style type="text/css">
+{
+    max-width: 700px;
+}
+
+.text_cell .prompt {
+    display: none;
+}
+
+div.cell {
+    padding: 0;
+}
+
+div.text_cell_render {
+    padding: 0;
+}
+
+div.prompt {
+    font-size: 13px;
+}
+
+div.input_prompt {
+    padding: .7em 0.2em;
+}
+
+div.output_prompt {
+    padding: .4em .2em;
+}
+
+div.input_area {
+    margin: .2em 0.4em;
+    max-width: 580px;
+}
+
+table.dataframe {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+table.dataframe th, td {
+    padding: 4px;
+    text-align: left;
+}
+
+pre code {
+    background-color: inherit;
+}</style>
+
+        </div>
+<!--
+    <footer>
+      <p>
+        © 2012-2017 Brendon Hall, license <a href=""> </a>
+        unless otherwise noted.
+        Generated by <a href= "http://docs.getpelican.com/">Pelican</a>.
+      </p>
+    </footer>
+-->
+    </body>
+</html>
