@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Brendon Hall - article</title><link href="https://brendonhall.github.io/" rel="alternate"></link><link href="https://brendonhall.github.io/feeds/article.atom.xml" rel="self"></link><id>https://brendonhall.github.io/</id><updated>2017-09-06T00:00:00-05:00</updated><entry><title>You Say You Want a Revolution?</title><link href="https://brendonhall.github.io/blog/2017/geoscience-data-revolution.html" rel="alternate"></link><published>2017-09-06T00:00:00-05:00</published><updated>2017-09-06T00:00:00-05:00</updated><author><name>Brendon Hall</name></author><id>tag:brendonhall.github.io,2017-09-06:/blog/2017/geoscience-data-revolution.html</id><summary type="html">&lt;h2&gt;Intro&lt;/h2&gt;
+&lt;p&gt;The past year(s) have been an exciting time to be a geoscientist that can code.&lt;br&gt;
+The ecosystem of software tools has reached a point where it is hard to keep up with the cool stuff coming out every week.
+The emergence of data science as a discipline in …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Intro&lt;/h2&gt;
+&lt;p&gt;The past year(s) have been an exciting time to be a geoscientist that can code.&lt;br&gt;
+The ecosystem of software tools has reached a point where it is hard to keep up with the cool stuff coming out every week.
+The emergence of data science as a discipline in its own right has changed our relationship with data.&lt;br&gt;
+We have become explorers, artists, innovators, and entrepreneurs.
+-something else about machine learning itself.&lt;/p&gt;
+&lt;p&gt;Communities have emerged
+swung, hackathon
+- many conversations on the impact on emerging ML and AI on geoscience and the exploration industry in particular
+- due in large part to the successes in other industries
+- geosciences are awash in data, but not always in a form suitable for machine learning
+- list a few open geoscience resources
+- what is required for this data to be useful?&lt;/p&gt;
+&lt;h2&gt;Background&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;examples of data driving machine learning innovation&lt;/li&gt;
+&lt;li&gt;ImageNet, refer to the article that goes over it's inception&lt;/li&gt;
+&lt;li&gt;2012 ImageNet challenge, Hinton etc launched the era of deep learning&lt;/li&gt;
+&lt;li&gt;
+&lt;ul&gt;
+&lt;li&gt;cover what went into the development of this&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ecommerce, and the massive amounts of structured data that online services collect&lt;/li&gt;
+&lt;li&gt;online services interest in innovating around data fueled Google's acquisition of Kaggle, the popular machine learning contest service.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Evidence&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Kaggle provided inspiration for the first SEG machine learning contest held earlier in 2017&lt;/li&gt;
+&lt;li&gt;This provides an example of how a simple, small but well curated dataset can fire the imaginations of geoscientists eager to develop their machine learning skills and spur an impressive amount of innovation.&lt;/li&gt;
+&lt;li&gt;background on the dataset, 7 wells from kansas, etc.&lt;/li&gt;
+&lt;li&gt;background on contest&lt;/li&gt;
+&lt;li&gt;some of the innovations that were made, summarized by &lt;a href="www.link.to.summary"&gt;Matt Hall&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;estimate of the person hours put into innovating these models, for the investment put in&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;What we can do&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;of course, oil and gas companies can't make all their data open to the public&lt;/li&gt;
+&lt;li&gt;I'm not advocating this and it isn't a good idea&lt;/li&gt;
+&lt;li&gt;there is too much of it, and companies derive much value from their proprietary data&lt;/li&gt;
+&lt;li&gt;there is a wealth of open geoscience data out there&lt;/li&gt;
+&lt;li&gt;innovation in data science can happen with small, tidy, well curated datasets that have a purpose&lt;/li&gt;
+&lt;li&gt;small/convenient - easy to obtain and quick to start using&lt;/li&gt;
+&lt;li&gt;tidy - require a minimum of data cleaning to start using effectively.  More on this in the next post&lt;/li&gt;
+&lt;li&gt;well curated - have documentation and tutorial articles for how to get started using the dataset&lt;/li&gt;
+&lt;li&gt;If you're working on a project with open data, I encourage you to share your story; what you did to clean it up, how you structured it, and what you did with it.  &lt;/li&gt;
+&lt;li&gt;Just as with the Kansas dataset, each of these datasets has a potential to spark a revolution on its on&lt;/li&gt;
+&lt;li&gt;For the forseeable future, this blog will focus on sharing other open datasets that I have found and worked with.  I hope you will use them as part of your own projects, share your results, and join the discussion.&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="open data"></category><category term="geoscience"></category><category term="machine learning"></category><category term="data science"></category></entry></feed>
