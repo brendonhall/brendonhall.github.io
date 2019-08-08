@@ -5,7 +5,7 @@ tags: open data, geoscience, machine learning, data science
 date: 2019-08-8
 modified: 2019-08-08
 
-![banner](../images/post_images/post_header.png)
+![banner]({filename}/images/post_header.png)
 
 A thousand metres beneath the earth’s surface in the southwest corner of Kansas, lies the Permian-aged Panoma gas field.  This field was first developed in the 1950s, and is one of the largest gas fields in North America.  Fast forward to today, and thousands of wells have been drilled into this reservoir and have been producing hydrocarbons for decades.  Data from just nine of these wells have become a subsurface playground for data science and machine learning, helping to guide geoscientists to a more digitally enabled future.
 
@@ -17,7 +17,7 @@ With this dataset in hand, it didn’t take long to explore using scikit-learn t
 
 Participants were invited to submit their models to the [SEG github repo](https://github.com/seg/2016-ml-contest), and the accuracy of the results were evaluated using two blind test wells supplied by KGU. The response was enthusiastic to say the least. During the 4 months of the contest, 300 entries were submitted by 40 teams from all over the world. The contest was run with in the spirit of collaboration as everyone could see submissions from other teams and build on each others ideas.  An active online community formed to discuss all aspects of the contest, with the conversation taking place on the Slack channel of the [Software Underground](https://softwareunderground.org/). The figure below shows how the scores of each team evolved over the course of the contest, as participants iterated on their models, learning and applying new techniques.  You can read more about the results in this [article](https://library.seg.org/doi/pdf/10.1190/tle36030267.1) summarizing the contest.
 
-![The progress over time of contest entries.](../images/post_images/Hall_and_Hall__Figure_1_sm.png) The progress over time of contest entries. (CC-BY, [Hall & Hall 2017](https://https://library.seg.org/doi/pdf/10.1190/tle36030267.1))
+![The progress over time of contest entries.]({filename}/images/Hall_and_Hall__Figure_1_sm.png) The progress over time of contest entries. (CC-BY, [Hall & Hall 2017](https://https://library.seg.org/doi/pdf/10.1190/tle36030267.1))
 
 During the past two years researchers, students and professionals have continued to use this dataset and the contest results to learn about machine learning and develop improved facies prediction models.  This demonstrates how a simple, small and well-curated dataset can encourage geoscientists eager to develop their machine learning skills and coding skills.  This dataset also provides a much needed benchmark for developing new technology.
 
